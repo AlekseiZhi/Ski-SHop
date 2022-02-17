@@ -7,45 +7,35 @@ import ru.skishop.service.UserService;
 @RestController
 public class UsersController {
 
-    private UserService userService;
+    private final UserService userService;
+
+    public UsersController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    public UserDTO findById(@RequestParam("id") Long id) {
-        System.out.println("работает контроллер на поиск по id");
+    public UserDTO findById(@RequestParam(value = "id") Long id) {
+        System.out.println("работает контроллер на поиск по id = " + id);
         return userService.findById(id);
     }
 
     @PostMapping
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
         System.out.println("работает контроллер на создание Юзера");
         return userService.createNewUser(userDTO);
     }
 
-//    @PostMapping(value = "/create")
-//    public UserDTO createUser_1(
-//            @RequestParam(name = "name") String name,
-//            @RequestParam(name = "email") String email,
-//            @RequestParam(name = "password") String password
-//            ) {
-//        return null;
-//    }
-//
-//    @PostMapping(value = "/body")
-//    public UserDTO createUser_2(
-//            @RequestBody UserDTO userDTO
-//    ) {
-//        return userService.create();
-//    }
-
     @PutMapping
-    public UserDTO editUser(UserDTO userDTO) {
+    public UserDTO editUser(@RequestBody UserDTO userDTO) {
         System.out.println("работает контроллер на изменение Юзера");
         return userService.editUser(userDTO);
+
     }
 
     @DeleteMapping
-    public void deleteUser(Long id) {
+    public String deleteUser(@RequestParam(value = "id") Long id) {
         userService.deleteUser(id);
         System.out.println("Контроллер для удаления Юзера отработал успешно");
+        return "User с id=" + id + " был удален";
     }
 }

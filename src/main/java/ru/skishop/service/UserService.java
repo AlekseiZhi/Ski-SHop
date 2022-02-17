@@ -6,7 +6,6 @@ import ru.skishop.entities.User;
 import ru.skishop.repository.UserRepository;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,7 +17,7 @@ public class UserService {
     }
 
     public User convertUserDTOToUser(UserDTO userDTO) {
-        return new User(userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
+        return new User(userDTO.getId(), userDTO.getName(), userDTO.getEmail(), userDTO.getPassword());
     }
 
     public UserDTO convertUserToUserDTO(User user) {
@@ -26,22 +25,26 @@ public class UserService {
         userDTO.setEmail(user.getEmail());
         userDTO.setName(user.getName());
         userDTO.setPassword(user.getPassword());
-        userDTO.setId(userDTO.getId());
+        userDTO.setId(user.getId());
         return userDTO;
     }
 
     public UserDTO createNewUser(UserDTO userDTO) {
         User user = convertUserDTOToUser(userDTO);
-       return convertUserToUserDTO(userRepository.saveAndFlush(user));
+        userRepository.saveAndFlush(user);
+        return convertUserToUserDTO(userRepository.saveAndFlush(user));
     }
 
     public UserDTO findById(Long id) {
-        return convertUserToUserDTO(Objects.requireNonNull(userRepository.findById(id).orElse(null)));
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            throw new RuntimeException();
+        });
+        return convertUserToUserDTO(user);
     }
 
     public UserDTO editUser(UserDTO userDTO) {
         User user = convertUserDTOToUser(userDTO);
-        return convertUserToUserDTO(userRepository.saveAndFlush(user));
+        return convertUserToUserDTO(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {
