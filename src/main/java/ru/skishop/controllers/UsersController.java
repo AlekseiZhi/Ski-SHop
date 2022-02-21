@@ -29,7 +29,6 @@ public class UsersController {
     public UserDTO editUser(@RequestBody UserDTO userDTO) {
         System.out.println("работает контроллер на изменение Юзера");
         return userService.editUser(userDTO);
-
     }
 
     @DeleteMapping
