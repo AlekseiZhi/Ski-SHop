@@ -1,11 +1,12 @@
 package ru.skishop.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.service.UserService;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 public class UsersController {
 

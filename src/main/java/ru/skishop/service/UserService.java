@@ -1,13 +1,14 @@
 package ru.skishop.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
 import ru.skishop.repository.UserRepository;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
