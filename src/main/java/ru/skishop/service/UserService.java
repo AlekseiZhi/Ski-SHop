@@ -1,25 +1,19 @@
 package ru.skishop.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
 import ru.skishop.repository.UserRepository;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleService roleService;
-
-    public UserService(UserRepository userRepository,
-                       BCryptPasswordEncoder passwordEncoder,
-                       RoleService roleService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
-    }
 
     public User convertUserDTOToUser(UserDto userDTO) {
         User user = new User();

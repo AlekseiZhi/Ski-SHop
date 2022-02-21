@@ -1,17 +1,15 @@
 package ru.skishop.controllers;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.service.UserService;
 
+@AllArgsConstructor
 @RestController
 public class UsersController {
 
     private final UserService userService;
-
-    public UsersController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public UserDto findById(@RequestParam(value = "id") Long id) {

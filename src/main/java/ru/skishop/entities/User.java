@@ -1,11 +1,9 @@
 package ru.skishop.entities;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -29,9 +27,5 @@ public class User {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
-
-    public List<Role> getRoles() {
-        return roles;
-    }
+    private List<Role> roles;
 }
