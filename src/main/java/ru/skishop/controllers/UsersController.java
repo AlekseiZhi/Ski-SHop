@@ -1,7 +1,7 @@
 package ru.skishop.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import ru.skishop.DTO.UserDTO;
+import ru.skishop.DTO.UserDto;
 import ru.skishop.service.UserService;
 
 @RestController
@@ -14,19 +14,19 @@ public class UsersController {
     }
 
     @GetMapping
-    public UserDTO findById(@RequestParam(value = "id") Long id) {
+    public UserDto findById(@RequestParam(value = "id") Long id) {
         System.out.println("работает контроллер на поиск по id = " + id);
         return userService.findById(id);
     }
 
     @PostMapping
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+    public UserDto createUser(@RequestBody UserDto userDTO) {
         System.out.println("работает контроллер на создание Юзера");
         return userService.createNewUser(userDTO);
     }
 
     @PutMapping
-    public UserDTO editUser(@RequestBody UserDTO userDTO) {
+    public UserDto editUser(@RequestBody UserDto userDTO) {
         System.out.println("работает контроллер на изменение Юзера");
         return userService.editUser(userDTO);
     }

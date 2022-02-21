@@ -2,9 +2,8 @@ package ru.skishop.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skishop.DTO.UserDTO;
+import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
-import ru.skishop.repository.RoleRepository;
 import ru.skishop.repository.UserRepository;
 
 @Service
@@ -15,7 +14,6 @@ public class UserService {
     private final RoleService roleService;
 
     public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
                        BCryptPasswordEncoder passwordEncoder,
                        RoleService roleService) {
         this.userRepository = userRepository;
@@ -23,7 +21,7 @@ public class UserService {
         this.roleService = roleService;
     }
 
-    public User convertUserDTOToUser(UserDTO userDTO) {
+    public User convertUserDTOToUser(UserDto userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setFullName(userDTO.getName());
@@ -33,28 +31,28 @@ public class UserService {
         return user;
     }
 
-    public UserDTO convertUserToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
+    public UserDto convertUserToUserDTO(User user) {
+        UserDto userDTO = new UserDto();
         userDTO.setEmail(user.getEmail());
         userDTO.setName(user.getFullName());
         userDTO.setId(user.getId());
         return userDTO;
     }
 
-    public UserDTO createNewUser(UserDTO userDTO) {
+    public UserDto createNewUser(UserDto userDTO) {
         User user = convertUserDTOToUser(userDTO);
         userRepository.save(user);
         return convertUserToUserDTO(userRepository.save(user));
     }
 
-    public UserDTO findById(Long id) {
+    public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
             throw new RuntimeException();
         });
         return convertUserToUserDTO(user);
     }
 
-    public UserDTO editUser(UserDTO userDTO) {
+    public UserDto editUser(UserDto userDTO) {
         User user = convertUserDTOToUser(userDTO);
         return convertUserToUserDTO(userRepository.save(user));
     }
