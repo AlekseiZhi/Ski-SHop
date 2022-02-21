@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import ru.skishop.entities.Role;
 import java.util.List;
 
-@Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query(value = "SELECT r " +
