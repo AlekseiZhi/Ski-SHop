@@ -5,12 +5,11 @@ import org.mapstruct.Mapping;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
 
-@Mapper(uses = {RoleMapper.class})
+@Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper {
 
     @Mapping(source = "user.roles", target = "roles")
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "listRoleId", ignore = true)
     UserDto toUserDto(User user);
 
     User toUser(UserDto userDto);

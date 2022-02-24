@@ -16,7 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleService roleService;
-    private final UserMapper userMapper = new UserMapperImpl();
+    private final UserMapper userMapper;
 
     public UserDto createNewUser(UserDto userDto) {
         User user = userMapper.toUser(userDto);
