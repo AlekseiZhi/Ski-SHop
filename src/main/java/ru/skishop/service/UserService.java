@@ -22,7 +22,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserDto createNewUser(UserDto userDto) {
-        return createUserWithParams(userDto);
+        return createOrUpdate(userDto);
     }
 
     public UserDto findById(Long id) {
@@ -33,10 +33,10 @@ public class UserService {
     }
 
     public UserDto editUser(UserDto userDto) {
-        return createUserWithParams(userDto);
+        return createOrUpdate(userDto);
     }
 
-    private UserDto createUserWithParams(UserDto userDto) {
+    private UserDto createOrUpdate(UserDto userDto) {
         User user = userMapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         List<Long> roleIds = userDto.getRoles().stream().map(RoleDto::getId).collect(Collectors.toList());
