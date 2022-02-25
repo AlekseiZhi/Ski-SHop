@@ -1,6 +1,5 @@
 package ru.skishop.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skishop.entities.Role;
@@ -13,7 +12,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    public List<Role> getRolesByIds(List<Long> list) {
-        return roleRepository.findRolesByIdList(list);
+    public List<Role> getRolesByIds(List<Long> ids) {
+        return roleRepository.findRolesByIdList(ids);
     }
 }

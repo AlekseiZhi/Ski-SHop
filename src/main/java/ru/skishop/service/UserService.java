@@ -1,12 +1,16 @@
 package ru.skishop.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.skishop.DTO.RoleDto;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
+import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -15,41 +19,29 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final UserMapper userMapper;
 
-    public User convertUserDTOToUser(UserDto userDTO) {
-        User user = new User();
-        user.setId(userDTO.getId());
-        user.setFullName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRoles(roleService.getRolesByIds(userDTO.getListRoleId()));
-        return user;
-    }
-
-    public UserDto convertUserToUserDTO(User user) {
-        UserDto userDTO = new UserDto();
-        userDTO.setEmail(user.getEmail());
-        userDTO.setName(user.getFullName());
-        userDTO.setId(user.getId());
-        return userDTO;
-    }
-
-    public UserDto createNewUser(UserDto userDTO) {
-        User user = convertUserDTOToUser(userDTO);
-        userRepository.save(user);
-        return convertUserToUserDTO(userRepository.save(user));
+    public UserDto createNewUser(UserDto userDto) {
+        return createOrUpdate(userDto);
     }
 
     public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
             throw new RuntimeException();
         });
-        return convertUserToUserDTO(user);
+        return userMapper.toUserDto(user);
     }
 
-    public UserDto editUser(UserDto userDTO) {
-        User user = convertUserDTOToUser(userDTO);
-        return convertUserToUserDTO(userRepository.save(user));
+    public UserDto editUser(UserDto userDto) {
+        return createOrUpdate(userDto);
+    }
+
+    private UserDto createOrUpdate(UserDto userDto) {
+        User user = userMapper.toUser(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        List<Long> roleIds = userDto.getRoles().stream().map(RoleDto::getId).collect(Collectors.toList());
+        user.setRoles(roleService.getRolesByIds(roleIds));
+        return userMapper.toUserDto(userRepository.save(user));
     }
 
     public void deleteUser(Long id) {

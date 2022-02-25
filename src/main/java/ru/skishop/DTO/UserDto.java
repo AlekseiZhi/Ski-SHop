@@ -7,8 +7,8 @@ import java.util.List;
 public class UserDto {
 
     private Long id;
-    private String name;
+    private String fullName;
     private String email;
     private String password;
-    private List<Long> listRoleId;
+    private List<RoleDto> roles;
 }
