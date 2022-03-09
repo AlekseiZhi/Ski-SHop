@@ -1,7 +1,6 @@
 package ru.skishop.entities;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

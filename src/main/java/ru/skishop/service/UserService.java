@@ -8,7 +8,6 @@ import ru.skishop.DTO.UserDto;
 import ru.skishop.entities.User;
 import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +19,12 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserMapper userMapper;
+
+    public List<UserDto> findAllUsers() {
+        return userRepository.findAllUsers().stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
+    }
 
     public UserDto createNewUser(UserDto userDto) {
         return createOrUpdate(userDto);

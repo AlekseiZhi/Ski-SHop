@@ -8,6 +8,5 @@ import ru.skishop.entities.Role;
 public interface RoleMapper {
 
     RoleDto toRoleDto(Role role);
-
     Role toRole(RoleDto roleDto);
 }

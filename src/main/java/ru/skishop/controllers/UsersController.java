@@ -4,12 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.DTO.UserDto;
 import ru.skishop.service.UserService;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class UsersController {
 
     private final UserService userService;
+
+    @GetMapping("/all")
+    public List<UserDto> findAllUsers() {
+        System.out.println("работает контроллер на поиск всех Юзеров");
+        return userService.findAllUsers();
+    }
 
     @GetMapping
     public UserDto findById(@RequestParam(value = "id") Long id) {
