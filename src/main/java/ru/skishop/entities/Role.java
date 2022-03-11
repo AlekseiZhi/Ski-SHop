@@ -1,6 +1,7 @@
 package ru.skishop.entities;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data

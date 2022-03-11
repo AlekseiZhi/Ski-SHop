@@ -2,14 +2,10 @@ package ru.skishop.DTO;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class UserDto {
+public class UserDtoForAuth {
 
-    private Long id;
     private String fullName;
     private String email;
     private String password;
-    private List<RoleDto> roles;
 }
