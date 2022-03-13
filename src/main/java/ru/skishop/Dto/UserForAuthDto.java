@@ -1,9 +1,9 @@
-package ru.skishop.DTO;
+package ru.skishop.Dto;
 
 import lombok.Data;
 
 @Data
-public class UserDtoForAuth {
+public class UserForAuthDto {
 
     private String fullName;
     private String email;

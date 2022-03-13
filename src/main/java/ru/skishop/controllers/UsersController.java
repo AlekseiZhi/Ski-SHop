@@ -2,7 +2,7 @@ package ru.skishop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.skishop.DTO.UserDto;
+import ru.skishop.Dto.UserDto;
 import ru.skishop.service.UserService;
 import java.util.List;
 

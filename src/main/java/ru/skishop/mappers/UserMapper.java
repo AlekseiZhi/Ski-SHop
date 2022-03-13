@@ -2,8 +2,8 @@ package ru.skishop.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.skishop.DTO.UserDto;
-import ru.skishop.DTO.UserDtoForAuth;
+import ru.skishop.Dto.UserDto;
+import ru.skishop.Dto.UserForAuthDto;
 import ru.skishop.entities.User;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
@@ -16,7 +16,5 @@ public interface UserMapper {
     @Mapping(target = "roles", ignore = true)
     User toUser(UserDto userDto);
 
-    User toUserAuth(UserDtoForAuth userDtoForAuth);
-
-    UserDtoForAuth toUserAuth(User user);
+    User toEntity(UserForAuthDto userForAuthDto);
 }

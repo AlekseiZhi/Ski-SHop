@@ -3,8 +3,9 @@ package ru.skishop.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skishop.DTO.RoleDto;
-import ru.skishop.DTO.UserDto;
+import ru.skishop.Dto.RoleDto;
+import ru.skishop.Dto.UserDto;
+import ru.skishop.Dto.UserForAuthDto;
 import ru.skishop.entities.User;
 import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
@@ -29,6 +30,16 @@ public class UserService {
 
     public UserDto createNewUser(UserDto userDto) {
         return createOrUpdate(userDto);
+    }
+
+    public void register(UserForAuthDto userForAuthDto) {
+        User user = userMapper.toEntity(userForAuthDto);
+        user.setPassword(passwordEncoder.encode(userForAuthDto.getPassword()));
+        userMapper.toUserDto(userRepository.save(user));
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
     public UserDto findById(Long id) {

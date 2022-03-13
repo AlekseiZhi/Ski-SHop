@@ -1,4 +1,4 @@
-package ru.skishop.DTO;
+package ru.skishop.Dto;
 
 import lombok.Data;
 
