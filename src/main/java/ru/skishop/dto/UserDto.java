@@ -1,6 +1,7 @@
-package ru.skishop.DTO;
+package ru.skishop.dto;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
