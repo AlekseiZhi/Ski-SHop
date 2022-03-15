@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.TokenWrapperDto;
 import ru.skishop.dto.UserForAuthDto;
+import ru.skishop.entities.User;
 
 @Service
 @RequiredArgsConstructor
@@ -13,14 +14,12 @@ public class AuthService {
     private final JwtService jwtService;
 
     public TokenWrapperDto register(UserForAuthDto userForAuthDto) {
-        TokenWrapperDto tokenWrapperDto = new TokenWrapperDto();
-        tokenWrapperDto.setAccessToken(jwtService.createJwt(userService.createNewUser(userForAuthDto)));
-        return tokenWrapperDto;
+        User user = userService.createNewUser(userForAuthDto);
+        return jwtService.createJwt(user);
     }
 
     public TokenWrapperDto login(UserForAuthDto userForAuthDto) {
-        TokenWrapperDto tokenWrapperDto = new TokenWrapperDto();
-        tokenWrapperDto.setAccessToken(jwtService.createJwt(userService.findUserByEmail(userForAuthDto.getEmail())));
-        return tokenWrapperDto;
+        User user = userService.findUserByEmail(userForAuthDto.getEmail());
+        return jwtService.createJwt(user);
     }
 }
