@@ -13,4 +13,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
             "FROM Role r" +
             " WHERE r.id IN :ids")
     List<Role> findRolesByIdList(@Param("ids") List<Long> ids);
+
+    Role findByName(String name);
 }

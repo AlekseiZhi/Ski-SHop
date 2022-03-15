@@ -3,9 +3,9 @@ package ru.skishop.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skishop.Dto.RoleDto;
-import ru.skishop.Dto.UserDto;
-import ru.skishop.Dto.UserForAuthDto;
+import ru.skishop.dto.RoleDto;
+import ru.skishop.dto.UserDto;
+import ru.skishop.dto.UserForAuthDto;
 import ru.skishop.entities.User;
 import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
@@ -32,10 +32,11 @@ public class UserService {
         return createOrUpdate(userDto);
     }
 
-    public void register(UserForAuthDto userForAuthDto) {
+    public User createNewUser(UserForAuthDto userForAuthDto) {
         User user = userMapper.toEntity(userForAuthDto);
+        user.setRoles(List.of(roleService.getDefaultRole()));
         user.setPassword(passwordEncoder.encode(userForAuthDto.getPassword()));
-        userMapper.toUserDto(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     public User findUserByEmail(String email) {
@@ -54,7 +55,7 @@ public class UserService {
     }
 
     private UserDto createOrUpdate(UserDto userDto) {
-        User user = userMapper.toUser(userDto);
+        User user = userMapper.toEntity(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         List<Long> roleIds = userDto.getRoles().stream().map(RoleDto::getId).collect(Collectors.toList());
         user.setRoles(roleService.getRolesByIds(roleIds));

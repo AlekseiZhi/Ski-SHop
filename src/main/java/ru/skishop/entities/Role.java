@@ -1,10 +1,11 @@
 package ru.skishop.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "role")
 public class Role {

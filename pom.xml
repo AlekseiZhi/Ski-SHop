@@ -80,13 +80,11 @@
             <version>1.4.2.Final</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.3.2</version>
         </dependency>
-
 
     </dependencies>
 

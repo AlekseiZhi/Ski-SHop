@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LEFT JOIN FETCH u.roles")
     List<User> findAllUsers();
 
-    User findUserByEmail(String name);
+    User findUserByEmail(String email);
 }

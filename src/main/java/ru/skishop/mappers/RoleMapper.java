@@ -1,7 +1,7 @@
 package ru.skishop.mappers;
 
 import org.mapstruct.Mapper;
-import ru.skishop.Dto.RoleDto;
+import ru.skishop.dto.RoleDto;
 import ru.skishop.entities.Role;
 
 @Mapper(componentModel = "spring")
