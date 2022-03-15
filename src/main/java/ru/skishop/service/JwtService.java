@@ -20,16 +20,15 @@ public class JwtService {
     private String secret;
 
     public TokenWrapperDto createJwt(User user) {
-        TokenWrapperDto tokenWrapperDto = new TokenWrapperDto();
         List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
         Claims claims = Jwts.claims().setExpiration(new Date());
         claims.put("id", user.getId());
         claims.put("email", user.getEmail());
         claims.put("roles", roles);
-        tokenWrapperDto.setAccessToken(Jwts.builder()
+        String jwt = Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, secret)
-                .compact());
-        return tokenWrapperDto;
+                .compact();
+        return new TokenWrapperDto(jwt);
     }
 }
