@@ -10,7 +10,5 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        ddl_auto: validate
-
 jwt:
   secret: secret
