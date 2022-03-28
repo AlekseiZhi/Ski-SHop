@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.TokenWrapperDto;
+import ru.skishop.dto.UserInfoToken;
 import ru.skishop.entities.Role;
 import ru.skishop.entities.User;
 
@@ -19,6 +20,9 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
+    Date now = new Date();
+    Date validity = new Date(now.getTime() + 36000000);
+
     public TokenWrapperDto createJwt(User user) {
         List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
         Claims claims = Jwts.claims().setExpiration(new Date());
@@ -27,8 +31,25 @@ public class JwtService {
         claims.put("roles", roles);
         String jwt = Jwts.builder()
                 .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+        System.out.println(jwt);
         return new TokenWrapperDto(jwt);
+    }
+
+    public UserInfoToken createTokenFromBearerToken(String token) {
+        UserInfoToken userInfoToken = new UserInfoToken();
+        Claims payload = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        userInfoToken.setId(payload.get("id", Long.class));
+        userInfoToken.setEmail(payload.get("email", String.class));
+        userInfoToken.setRoles(payload.get("roles", List.class));
+
+        return userInfoToken;
     }
 }
