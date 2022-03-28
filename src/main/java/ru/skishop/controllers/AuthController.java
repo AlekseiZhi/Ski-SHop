@@ -16,6 +16,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public TokenWrapperDto dynamicBuilderGeneric(@RequestBody UserForAuthDto userForAuthDto) {
+        System.out.println("login controller");
         return authService.login(userForAuthDto);
     }
 

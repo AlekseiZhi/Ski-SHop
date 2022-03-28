@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.UserDto;
 import ru.skishop.service.UserService;
+
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -13,33 +15,33 @@ public class UsersController {
     private final UserService userService;
 
     @GetMapping("/all")
+    @RolesAllowed("admin")
     public List<UserDto> findAllUsers() {
-        System.out.println("работает контроллер на поиск всех Юзеров");
         return userService.findAllUsers();
     }
 
-    @GetMapping
+    @GetMapping()
+    @RolesAllowed("admin")
     public UserDto findById(@RequestParam(value = "id") Long id) {
-        System.out.println("работает контроллер на поиск по id = " + id);
         return userService.findById(id);
     }
 
     @PostMapping
+    @RolesAllowed("admin")
     public UserDto createUser(@RequestBody UserDto userDTO) {
-        System.out.println("работает контроллер на создание Юзера");
         return userService.createNewUser(userDTO);
     }
 
     @PutMapping
+    @RolesAllowed("admin")
     public UserDto editUser(@RequestBody UserDto userDTO) {
-        System.out.println("работает контроллер на изменение Юзера");
         return userService.editUser(userDTO);
     }
 
     @DeleteMapping
+    @RolesAllowed("admin")
     public String deleteUser(@RequestParam(value = "id") Long id) {
         userService.deleteUser(id);
-        System.out.println("Контроллер для удаления Юзера отработал успешно");
         return "User с id=" + id + " был удален";
     }
 }

@@ -3,12 +3,20 @@ spring:
     driver-Class-Name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: navvrks9
+    password: 123
 
   jpa:
     properties:
       hibernate:
         show_sql: true
         format_sql: true
+  reactor:
+    debug-agent:
+      enabled: true
 jwt:
   secret: secret
+logging:
+   level:
+      root: debug
+      org.springframework.web: debug
+      org.hibernate: error
