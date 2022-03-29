@@ -24,6 +24,6 @@ public class SecurityService {
     }
 
     private List<GrantedAuthority> mapRolesToAuthorities(List<String> roles) {
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return roles.stream().map(r -> new SimpleGrantedAuthority("ROLE_" + r)).collect(Collectors.toList());
     }
 }
