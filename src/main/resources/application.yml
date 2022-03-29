@@ -12,3 +12,8 @@ spring:
         format_sql: true
 jwt:
   secret: secret
+logging:
+  level:
+    root: debug
+    org.springframework.web: debug
+    org.hibernate: error

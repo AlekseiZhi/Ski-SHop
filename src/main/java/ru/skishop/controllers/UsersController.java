@@ -1,9 +1,12 @@
 package ru.skishop.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.UserDto;
 import ru.skishop.service.UserService;
+
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -13,33 +16,37 @@ public class UsersController {
     private final UserService userService;
 
     @GetMapping("/all")
-    public List<UserDto> findAllUsers() {
-        System.out.println("работает контроллер на поиск всех Юзеров");
-        return userService.findAllUsers();
+    @RolesAllowed("admin")
+    public ResponseEntity<List<UserDto>> findAllUsers() {
+        List<UserDto> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping
-    public UserDto findById(@RequestParam(value = "id") Long id) {
-        System.out.println("работает контроллер на поиск по id = " + id);
-        return userService.findById(id);
+    @RolesAllowed("admin")
+    public ResponseEntity<UserDto> findById(@RequestParam(value = "id") Long id) {
+        UserDto userDto = userService.findById(id);
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody UserDto userDTO) {
-        System.out.println("работает контроллер на создание Юзера");
-        return userService.createNewUser(userDTO);
+    @RolesAllowed("admin")
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDTO) {
+        UserDto userDto = userService.createNewUser(userDTO);
+        return ResponseEntity.ok(userDto);
     }
 
     @PutMapping
-    public UserDto editUser(@RequestBody UserDto userDTO) {
-        System.out.println("работает контроллер на изменение Юзера");
-        return userService.editUser(userDTO);
+    @RolesAllowed("admin")
+    public ResponseEntity<UserDto> editUser(@RequestBody UserDto userDTO) {
+        UserDto userDto = userService.editUser(userDTO);
+        return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping
-    public String deleteUser(@RequestParam(value = "id") Long id) {
+    @RolesAllowed("admin")
+    public ResponseEntity<Void> deleteUser(@RequestParam(value = "id") Long id) {
         userService.deleteUser(id);
-        System.out.println("Контроллер для удаления Юзера отработал успешно");
-        return "User с id=" + id + " был удален";
+        return ResponseEntity.noContent().build();
     }
 }
