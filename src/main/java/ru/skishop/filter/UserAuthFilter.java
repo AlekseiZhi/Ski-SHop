@@ -27,7 +27,7 @@ public class UserAuthFilter extends UsernamePasswordAuthenticationFilter {
         String header = httpServletRequest.getHeader("Authorization");
 
         if (header == null) {
-            log.info("header null");
+            log.info("UserAuthFilter: Header is empty");
             throw new RuntimeException();
         }
 

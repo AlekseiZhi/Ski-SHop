@@ -10,7 +10,6 @@ import ru.skishop.dto.UserInfoToken;
 import ru.skishop.entities.Role;
 import ru.skishop.entities.User;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,19 +19,14 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    Date now = new Date();
-    Date validity = new Date(now.getTime() + 36000000);
-
     public TokenWrapperDto createJwt(User user) {
         List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-        Claims claims = Jwts.claims().setExpiration(new Date());
+        Claims claims = Jwts.claims();
         claims.put("id", user.getId());
         claims.put("email", user.getEmail());
         claims.put("roles", roles);
         String jwt = Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
         System.out.println(jwt);
