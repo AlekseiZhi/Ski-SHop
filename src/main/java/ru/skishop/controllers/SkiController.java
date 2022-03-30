@@ -17,29 +17,29 @@ public class SkiController {
 
     private final SkiService skiService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<SkiDto>> findAllUsers() {
+    @GetMapping
+    public ResponseEntity<List<SkiDto>> findAllSkis() {
         List<SkiDto> skis = skiService.findAllSkis();
         return ResponseEntity.ok(skis);
     }
 
     @PostMapping
     @RolesAllowed("admin")
-    public ResponseEntity<SkiDto> create(@RequestBody SkiDto skiDTO) {
-        SkiDto skiDto = skiService.create(skiDTO);
-        return ResponseEntity.ok(skiDto);
+    public ResponseEntity<SkiDto> create(@RequestBody SkiDto skiDto) {
+        SkiDto ski = skiService.create(skiDto);
+        return ResponseEntity.ok(ski);
     }
 
     @PutMapping
     @RolesAllowed("admin")
-    public ResponseEntity<SkiDto> edit(@RequestBody SkiDto skiDTO) {
-        SkiDto skiDto = skiService.edit(skiDTO);
-        return ResponseEntity.ok(skiDto);
+    public ResponseEntity<SkiDto> edit(@RequestBody SkiDto skiDto) {
+        SkiDto ski = skiService.edit(skiDto);
+        return ResponseEntity.ok(ski);
     }
 
     @DeleteMapping
     @RolesAllowed("admin")
-    public ResponseEntity<Void> delete(@RequestParam(value = "id") Long id) {
+    public ResponseEntity<Void> delete(@RequestParam("id") Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
     }

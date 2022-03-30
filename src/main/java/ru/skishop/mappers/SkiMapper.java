@@ -8,5 +8,6 @@ import ru.skishop.entities.Ski;
 public interface SkiMapper {
 
     SkiDto toSkiDto(Ski ski);
+
     Ski toEntity(SkiDto skiDto);
 }

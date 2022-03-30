@@ -11,11 +11,12 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "skis")
 public class Ski {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String categories;
+    private String category;
     private String company;
     private String title;
     private int length;

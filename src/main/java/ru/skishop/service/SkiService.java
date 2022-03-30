@@ -23,12 +23,14 @@ public class SkiService {
 
     public SkiDto create(SkiDto skiDto) {
         Ski ski = skiMapper.toEntity(skiDto);
-        return skiMapper.toSkiDto(skiRepository.save(ski));
+        ski = skiRepository.save(ski);
+        return skiMapper.toSkiDto(ski);
     }
 
     public SkiDto edit(SkiDto skiDto) {
         Ski ski = skiMapper.toEntity(skiDto);
-        return skiMapper.toSkiDto(skiRepository.save(ski));
+        ski = skiRepository.save(ski);
+        return skiMapper.toSkiDto(ski);
     }
 
     public void delete(Long id) {

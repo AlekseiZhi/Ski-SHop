@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class SkiDto {
 
     private Long id;
-    private String categories;
+    private String category;
     private String company;
     private String title;
     private int length;
