@@ -40,7 +40,7 @@ public class SkiController {
 
     @DeleteMapping
     @RolesAllowed("admin")
-    public ResponseEntity<Void> delete(@Valid @RequestParam("id") Long id) {
+    public ResponseEntity<Void> delete(@RequestParam("id") Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
     }
