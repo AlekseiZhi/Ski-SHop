@@ -2,15 +2,19 @@ package ru.skishop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.UserDto;
 import ru.skishop.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class UsersController {
 
     private final UserService userService;
@@ -22,30 +26,30 @@ public class UsersController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping
+    @GetMapping("{id}")
     @RolesAllowed("admin")
-    public ResponseEntity<UserDto> findById(@RequestParam("id") Long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable("id") @Min(1) Long id) {
         UserDto user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
     @RolesAllowed("admin")
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto user = userService.createNewUser(userDto);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping
     @RolesAllowed("admin")
-    public ResponseEntity<UserDto> editUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> editUser(@Valid @RequestBody UserDto userDto) {
         UserDto user = userService.editUser(userDto);
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     @RolesAllowed("admin")
-    public ResponseEntity<Void> deleteUser(@RequestParam("id") Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") @Min(1) Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

@@ -2,18 +2,20 @@ package ru.skishop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
-@Valid
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ski")
+@Validated
 public class SkiController {
 
     private final SkiService skiService;
@@ -38,9 +40,9 @@ public class SkiController {
         return ResponseEntity.ok(ski);
     }
 
-    @DeleteMapping
+    @DeleteMapping("{id}")
     @RolesAllowed("admin")
-    public ResponseEntity<Void> delete(@RequestParam("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") @Min(1) Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
     }
