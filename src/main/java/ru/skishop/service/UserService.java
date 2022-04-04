@@ -1,18 +1,21 @@
 package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
 import ru.skishop.entities.User;
+import ru.skishop.exception.NotFoundException;
 import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -28,6 +31,23 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public User findUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            log.info("UserService: Not found User by email = {}", email);
+            throw new NotFoundException("Not found User by email = " + email);
+        }
+        return user;
+    }
+
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            log.info("UserService: Not found User by id = {}", id);
+            throw new NotFoundException("Not found User by id = " + id);
+        });
+        return userMapper.toUserDto(user);
+    }
+
     public UserDto createNewUser(UserDto userDto) {
         return createOrUpdate(userDto);
     }
@@ -37,17 +57,6 @@ public class UserService {
         user.setRoles(List.of(roleService.getDefaultRole()));
         user.setPassword(passwordEncoder.encode(userForAuthDto.getPassword()));
         return userRepository.save(user);
-    }
-
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
-    }
-
-    public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException();
-        });
-        return userMapper.toUserDto(user);
     }
 
     public UserDto editUser(UserDto userDto) {

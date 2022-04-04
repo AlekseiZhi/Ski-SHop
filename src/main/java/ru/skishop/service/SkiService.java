@@ -1,6 +1,7 @@
 package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entities.Ski;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SkiService {
 
     private final SkiRepository skiRepository;

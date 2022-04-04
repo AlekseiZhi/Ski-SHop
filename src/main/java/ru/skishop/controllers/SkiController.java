@@ -42,7 +42,7 @@ public class SkiController {
 
     @DeleteMapping("{id}")
     @RolesAllowed("admin")
-    public ResponseEntity<Void> delete(@PathVariable("id") @Min(1) Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
     }
