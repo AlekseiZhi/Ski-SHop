@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entities.Ski;
+import ru.skishop.exception.NotFoundException;
 import ru.skishop.mappers.SkiMapper;
 import ru.skishop.repository.SkiRepository;
 
@@ -18,7 +19,11 @@ public class SkiService {
     private final SkiMapper skiMapper;
 
     public List<SkiDto> findAllSkis() {
-        return skiRepository.findAll().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
+        List<SkiDto> skis = skiRepository.findAll().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
+        if (skis.isEmpty()) {
+            throw new NotFoundException("Not found skis");
+        }
+        return skis;
     }
 
     public SkiDto create(SkiDto skiDto) {

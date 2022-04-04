@@ -7,6 +7,7 @@ import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
 import ru.skishop.entities.User;
+import ru.skishop.exception.NotFoundException;
 import ru.skishop.mappers.UserMapper;
 import ru.skishop.repository.UserRepository;
 
@@ -23,9 +24,28 @@ public class UserService {
     private final UserMapper userMapper;
 
     public List<UserDto> findAllUsers() {
-        return userRepository.findAllUsers().stream()
+        List<UserDto> users = userRepository.findAllUsers().stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
+        if (users.isEmpty()) {
+            throw new NotFoundException("Not found users");
+        }
+        return users;
+    }
+
+    public User findUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("Not found User by email = " + email);
+        }
+        return user;
+    }
+
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException("Not found User by id = " + id);
+        });
+        return userMapper.toUserDto(user);
     }
 
     public UserDto createNewUser(UserDto userDto) {
@@ -37,17 +57,6 @@ public class UserService {
         user.setRoles(List.of(roleService.getDefaultRole()));
         user.setPassword(passwordEncoder.encode(userForAuthDto.getPassword()));
         return userRepository.save(user);
-    }
-
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
-    }
-
-    public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException();
-        });
-        return userMapper.toUserDto(user);
     }
 
     public UserDto editUser(UserDto userDto) {
