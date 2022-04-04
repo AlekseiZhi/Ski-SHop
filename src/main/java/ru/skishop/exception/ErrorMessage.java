@@ -9,8 +9,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ErrorMessage {
 
-    private final int statusCode;
     private final Date timestamp;
     private final String message;
-    private final String description;
 }

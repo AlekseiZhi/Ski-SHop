@@ -1,6 +1,5 @@
 package ru.skishop.exception;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -14,10 +13,8 @@ public class ControllerException {
     public ErrorMessage notFoundException(NotFoundException exception, WebRequest webRequest) {
 
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.NOT_FOUND.value(),
                 new Date(),
-                exception.getMessage(),
-                webRequest.getDescription(false));
+                exception.getMessage());
         return message;
     }
 
@@ -25,10 +22,8 @@ public class ControllerException {
     public ErrorMessage globalExceptionHandler(Exception exception, WebRequest webRequest) {
 
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 new Date(),
-                exception.getMessage(),
-                webRequest.getDescription(false));
+                exception.getMessage());
         return message;
     }
 }
