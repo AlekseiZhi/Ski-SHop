@@ -34,7 +34,7 @@ public class UserService {
     public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            log.info("UserService: Not found User by email");
+            log.info("UserService: Not found User by email = " + email);
             throw new NotFoundException("Not found User by email = " + email);
         }
         return user;
@@ -42,7 +42,7 @@ public class UserService {
 
     public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            log.info("UserService: Not found User by id");
+            log.info("UserService: Not found User by id = " + id);
             throw new NotFoundException("Not found User by id = " + id);
         });
         return userMapper.toUserDto(user);
