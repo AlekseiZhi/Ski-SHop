@@ -9,6 +9,7 @@ import java.util.Date;
 
 @RestControllerAdvice
 public class ControllerException {
+
     @ExceptionHandler(NotFoundException.class)
     public ErrorMessage notFoundException(NotFoundException exception, WebRequest webRequest) {
 

@@ -1,6 +1,7 @@
 package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.RoleDto;
@@ -14,6 +15,7 @@ import ru.skishop.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -24,18 +26,15 @@ public class UserService {
     private final UserMapper userMapper;
 
     public List<UserDto> findAllUsers() {
-        List<UserDto> users = userRepository.findAllUsers().stream()
+        return userRepository.findAllUsers().stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
-        if (users.isEmpty()) {
-            throw new NotFoundException("Not found users");
-        }
-        return users;
     }
 
     public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
+            log.info("UserService: Not found User by email");
             throw new NotFoundException("Not found User by email = " + email);
         }
         return user;
@@ -43,6 +42,7 @@ public class UserService {
 
     public UserDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
+            log.info("UserService: Not found User by id");
             throw new NotFoundException("Not found User by id = " + id);
         });
         return userMapper.toUserDto(user);
