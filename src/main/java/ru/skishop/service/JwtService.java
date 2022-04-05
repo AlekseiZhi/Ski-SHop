@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.TokenWrapperDto;
 import ru.skishop.dto.UserInfoToken;
-import ru.skishop.entities.Role;
-import ru.skishop.entities.User;
+import ru.skishop.entity.Role;
+import ru.skishop.entity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;

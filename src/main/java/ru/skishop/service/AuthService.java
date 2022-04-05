@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.TokenWrapperDto;
 import ru.skishop.dto.UserForAuthDto;
-import ru.skishop.entities.User;
+import ru.skishop.entity.User;
 
 @Service
 @RequiredArgsConstructor

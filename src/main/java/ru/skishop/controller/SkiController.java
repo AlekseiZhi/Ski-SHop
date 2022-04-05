@@ -1,4 +1,4 @@
-package ru.skishop.controllers;
+package ru.skishop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class SkiController {
         return ResponseEntity.ok(ski);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @RolesAllowed("admin")
     public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         skiService.delete(id);

@@ -1,4 +1,4 @@
-package ru.skishop.entities;
+package ru.skishop.entity;
 
 import lombok.*;
 
