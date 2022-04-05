@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -32,10 +33,7 @@ public class ControllerException {
 
         List<FieldError> errors = exception.getFieldErrors();
         List<ErrorMessage> errorMessageList = new ArrayList<>();
-
-        for (FieldError error : errors) {
-            errorMessageList.add(new ErrorMessage(new Date(), error.getDefaultMessage()));
-        }
+        errors.stream().map(err -> errorMessageList.add(new ErrorMessage(new Date(), err.getDefaultMessage()))).collect(Collectors.toList());
         return errorMessageList;
     }
 
@@ -45,9 +43,7 @@ public class ControllerException {
         List<FieldError> errors = exception.getFieldErrors();
         List<ErrorMessage> errorMessageList = new ArrayList<>();
 
-        for (FieldError error : errors) {
-            errorMessageList.add(new ErrorMessage(new Date(), error.getDefaultMessage()));
-        }
+        errors.stream().map(err -> errorMessageList.add(new ErrorMessage(new Date(), err.getDefaultMessage()))).collect(Collectors.toList());
         return errorMessageList;
     }
 }
