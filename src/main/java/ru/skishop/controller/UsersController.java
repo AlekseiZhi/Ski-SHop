@@ -1,4 +1,4 @@
-package ru.skishop.controllers;
+package ru.skishop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class UsersController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @RolesAllowed("admin")
     public ResponseEntity<UserDto> findById(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         UserDto user = userService.findById(id);
@@ -47,7 +47,7 @@ public class UsersController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @RolesAllowed("admin")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         userService.deleteUser(id);

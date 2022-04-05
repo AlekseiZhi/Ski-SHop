@@ -3,7 +3,7 @@ package ru.skishop.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.skishop.entities.Role;
+import ru.skishop.entity.Role;
 
 import java.util.List;
 

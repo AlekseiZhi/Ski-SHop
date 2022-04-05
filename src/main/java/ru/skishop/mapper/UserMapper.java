@@ -1,10 +1,10 @@
-package ru.skishop.mappers;
+package ru.skishop.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
-import ru.skishop.entities.User;
+import ru.skishop.entity.User;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper {

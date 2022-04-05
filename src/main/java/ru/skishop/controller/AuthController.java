@@ -1,4 +1,4 @@
-package ru.skishop.controllers;
+package ru.skishop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

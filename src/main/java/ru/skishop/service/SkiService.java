@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.SkiDto;
-import ru.skishop.entities.Ski;
-import ru.skishop.mappers.SkiMapper;
+import ru.skishop.entity.Ski;
+import ru.skishop.mapper.SkiMapper;
 import ru.skishop.repository.SkiRepository;
 
 import java.util.List;
