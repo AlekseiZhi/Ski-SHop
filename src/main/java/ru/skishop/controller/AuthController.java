@@ -1,5 +1,7 @@
 package ru.skishop.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +12,8 @@ import ru.skishop.service.AuthService;
 
 @RequiredArgsConstructor
 @RestController
+@Api(tags = "Auth Controller")
+//@Tag(name = "AuthController", description = "Operations for authentication")
 public class AuthController {
 
     private final AuthService authService;

@@ -23,7 +23,6 @@ public class UserAuthFilter extends UsernamePasswordAuthenticationFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-
         String header = httpServletRequest.getHeader("Authorization");
 
         if (header == null) {
