@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -30,8 +29,7 @@ public class SkiController {
     @Operation(summary = "Get list of skis")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "403", description = "You do not have access rights")
+            @ApiResponse(responseCode = "400", description = "Bad request")
     })
     public ResponseEntity<List<SkiDto>> findAllSkis() {
         List<SkiDto> skis = skiService.findAllSkis();
@@ -42,7 +40,9 @@ public class SkiController {
     @RolesAllowed("admin")
     @Operation(summary = "Create new ski")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Create new ski using Json body")
+            @ApiResponse(responseCode = "200", description = "Create new ski using Json body"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<SkiDto> create(@Valid @RequestBody SkiDto skiDto) {
         SkiDto ski = skiService.create(skiDto);
@@ -53,7 +53,9 @@ public class SkiController {
     @RolesAllowed("admin")
     @Operation(summary = "Edit ski")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Edit ski using Json body")
+            @ApiResponse(responseCode = "200", description = "Edit ski using Json body"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<SkiDto> edit(@Valid @RequestBody SkiDto skiDto) {
         SkiDto ski = skiService.edit(skiDto);
@@ -64,7 +66,9 @@ public class SkiController {
     @RolesAllowed("admin")
     @Operation(summary = "Delete ski")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Delete ski by id")
+            @ApiResponse(responseCode = "200", description = "Delete ski by id"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         skiService.delete(id);

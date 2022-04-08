@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,17 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Validated
-//@Tag(name = "UserController", description = "User entity operations")
 @Api(tags = "User Controller")
 public class UsersController {
 
     private final UserService userService;
 
-    @GetMapping("/all")
+    @GetMapping
     @RolesAllowed("admin")
     @Operation(summary = "Get list of users")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Get list of users from catalogue")
+            @ApiResponse(responseCode = "200", description = "Get list of users from catalogue"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<List<UserDto>> findAllUsers() {
         List<UserDto> users = userService.findAllUsers();
@@ -41,7 +41,9 @@ public class UsersController {
     @RolesAllowed("admin")
     @Operation(summary = "Get user by id")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Get user by id")
+            @ApiResponse(responseCode = "200", description = "Get user by id"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<UserDto> findById(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         UserDto user = userService.findById(id);
@@ -52,7 +54,9 @@ public class UsersController {
     @RolesAllowed("admin")
     @Operation(summary = "Create new user")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Create new user using Json body")
+            @ApiResponse(responseCode = "200", description = "Create new user using Json body"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto user = userService.createNewUser(userDto);
@@ -63,7 +67,9 @@ public class UsersController {
     @RolesAllowed("admin")
     @Operation(summary = "Edit user")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Edit user using Json body")
+            @ApiResponse(responseCode = "200", description = "Edit user using Json body"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<UserDto> editUser(@Valid @RequestBody UserDto userDto) {
         UserDto user = userService.editUser(userDto);
@@ -74,7 +80,9 @@ public class UsersController {
     @RolesAllowed("admin")
     @Operation(summary = "Delete user")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Delete user by id")
+            @ApiResponse(responseCode = "200", description = "Delete user by id"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
     public ResponseEntity<Void> deleteUser(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         userService.deleteUser(id);
