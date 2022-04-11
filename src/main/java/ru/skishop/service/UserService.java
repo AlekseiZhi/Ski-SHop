@@ -8,7 +8,7 @@ import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
 import ru.skishop.entity.User;
-import ru.skishop.exception.NotFoundException;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.UserMapper;
 import ru.skishop.repository.UserRepository;
 
