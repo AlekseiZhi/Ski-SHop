@@ -1,0 +1,52 @@
+#spring:
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
+#  datasource:
+#    driver-Class-Name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: 123
+#
+#  jpa:
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+#jwt:
+#  secret: secret
+
+#spring:
+#  jpa:
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        use_sql_comments: true
+#        format_sql: true
+#    hibernate:
+#      ddl-auto: create-drop
+#  datasource:
+#    url: jdbc:tc:postgresql:14.1:///testdb
+#  flyway:
+#    enabled: false
+#jwt:
+#  secret: secret
+
+#spring:
+#  datasource:
+#    url: jdbc:tc:postgresql:13.2:///testdb?TC_INITSCRIPT=insertTestRows.sql
+#    username: duke
+#    password: s3crEt
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+#    hibernate:
+#      ddl-auto: create-drop
+#
+
+#keycloak:
+#  auth-server-url: http://mock
+#  realm: mock
+#  resource: mock
+#  public-client: true
+#  bearer-only: true
+#  use-resource-role-mappings: true

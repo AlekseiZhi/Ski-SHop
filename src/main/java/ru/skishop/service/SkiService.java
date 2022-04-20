@@ -38,4 +38,8 @@ public class SkiService {
     public void delete(Long id) {
         skiRepository.deleteById(id);
     }
+
+    public SkiDto find(Long id){
+        return skiMapper.toSkiDto(skiRepository.findSkisById(id));
+    }
 }
