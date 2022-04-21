@@ -1,7 +1,4 @@
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   jpa:
     properties:
       hibernate:
@@ -12,8 +9,9 @@ spring:
       ddl-auto: create-drop
   datasource:
     url: jdbc:tc:postgresql:14.1:///testdb
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   flyway:
     enabled: false
 
 jwt:
-  secret: mock
+  secret: secret
