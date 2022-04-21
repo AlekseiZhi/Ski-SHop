@@ -26,15 +26,13 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@SpringBootTest(properties = {
-        "spring.datasource.url=jdbc:tc:postgresql:12:///springboot?TC_INITSCRIPT=somepath/init_mysql.sql"
-})
+@SpringBootTest
 @Testcontainers
+@AutoConfigureMockMvc
 public class Codefiction {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final String TEST_HEADER = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsIiwicm9sZXMiOlsiYWRtaW4iXX0.Q86rc5CfwturyaJLEDDJCEkYTas7K2uV6AWnAEmnp-s";
+    private static final String TEST_HEADER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsIiwicm9sZXMiOlsiYWRtaW4iXX0.Q86rc5CfwturyaJLEDDJCEkYTas7K2uV6AWnAEmnp-s";
 
     @Autowired
     private MockMvc mockMvc;
@@ -108,11 +106,10 @@ public class Codefiction {
 //        assertThat(actualResponseBody.getEmail()).isEqualTo(expected.getEmail());
     }
 
-    @WithMockUser(roles = "admin")
-    @Sql({"/insertTestRows.sql"})
     @Test
+    @WithMockUser(roles = "admin")
+    @Sql("/insertTestRows.sql")
     public void delete() throws Exception {
-
         Long testId = 2L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/ski/{testId}", testId)
