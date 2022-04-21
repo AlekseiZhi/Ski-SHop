@@ -110,7 +110,7 @@ public class Codefiction {
     @WithMockUser(roles = "admin")
     @Sql("/insertTestRows.sql")
     public void delete() throws Exception {
-        Long testId = 2L;
+        Long testId = 1L;
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/ski/{testId}", testId)
                         .header("Authorization", TEST_HEADER)
