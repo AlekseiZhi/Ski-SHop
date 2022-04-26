@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
+import ru.skishop.entity.Role;
 import ru.skishop.entity.User;
 import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.UserMapper;

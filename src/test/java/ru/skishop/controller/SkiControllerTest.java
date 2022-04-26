@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skishop.dto.SkiDto;
-import ru.skishop.exceptionHandler.NotFoundException;
-import ru.skishop.mapper.SkiMapper;
-import ru.skishop.repository.SkiRepository;
 import ru.skishop.service.SkiService;
 import utils.HttpUtils;
 
@@ -37,40 +33,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SkiControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    //private static final String TEST_HEADER = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsIiwicm9sZXMiOlsiYWRtaW4iXX0.Q86rc5CfwturyaJLEDDJCEkYTas7K2uV6AWnAEmnp-s";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private SkiRepository skiRepository;
-
-    @Autowired
     private SkiService skiService;
-
-    @Autowired
-    private SkiMapper skiMapper;
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRows.sql")
+    @Sql("/db/insertTestRowsSki.sql")
     public void findAllSkis() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(get("/ski"))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        System.out.println(skiRepository.findAll());
-
-        List<SkiDto> skiDtoListExpected = skiRepository.findAll().stream().map(skiMapper::toSkiDto).toList();
-        List<SkiDto> skiDtoListActual = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<SkiDto> skis = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        SkiDto expected = skiDtoListExpected.get(0);
-        SkiDto actual = skiDtoListActual.get(0);
-
-        Assertions.assertEquals(expected.getTitle(), actual.getTitle());
-        Assertions.assertEquals(expected.getId(), actual.getId());
+        Assertions.assertEquals(skis.size(), 2);
     }
 
     @WithMockUser(roles = "admin")
@@ -100,7 +82,7 @@ public class SkiControllerTest {
     @WithMockUser(roles = "admin")
     @Test
     @Transactional
-    public void negativeCredentialsCreate() throws Exception {
+    public void negativeSkiCreate() throws Exception {
 
         SkiDto expected = new SkiDto();
         expected.setTitle("");
@@ -117,7 +99,7 @@ public class SkiControllerTest {
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRows.sql")
+    @Sql("/db/insertTestRowsSki.sql")
     @Transactional
     public void edit() throws Exception {
 
@@ -134,17 +116,15 @@ public class SkiControllerTest {
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isOk())
                 .andReturn();
+        SkiDto actualSkiDto = HttpUtils.convertMvcResult(mvcResult, SkiDto.class);
 
-        Assertions.assertEquals(expected.getTitle(), HttpUtils.convertMvcResult(mvcResult, SkiDto.class).getTitle());
-
-        //Assertions.assertEquals(expected.getId(), OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), SkiDto.class).getId());
-        Assertions.assertEquals(expected.getId(), HttpUtils.convertMvcResult(mvcResult, SkiDto.class).getId());
-
+        Assertions.assertEquals(expected.getTitle(), actualSkiDto.getTitle());
+        Assertions.assertEquals(expected.getId(), actualSkiDto.getId());
     }
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRows.sql")
+    @Sql("/db/insertTestRowsSki.sql")
     @Transactional
     public void negativeIdEdit() throws Exception {
 
@@ -154,7 +134,7 @@ public class SkiControllerTest {
         expected.setCompany("k2");
         expected.setLength(190);
         expected.setPrice(BigDecimal.valueOf(35000));
-        expected.setId(2L);
+        expected.setId(3L);
 
         mockMvc.perform(put("/ski")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -164,9 +144,9 @@ public class SkiControllerTest {
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRows.sql")
+    @Sql("/db/insertTestRowsSki.sql")
     @Transactional
-    public void negativeCredentialsEdit() throws Exception {
+    public void negativeEdit() throws Exception {
 
         SkiDto expected = new SkiDto();
         expected.setTitle("");
@@ -176,7 +156,7 @@ public class SkiControllerTest {
         expected.setPrice(BigDecimal.valueOf(35000));
         expected.setId(1L);
 
-       mockMvc.perform(put("/ski")
+        mockMvc.perform(put("/ski")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isBadRequest());
@@ -184,7 +164,7 @@ public class SkiControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    @Sql("/db/insertTestRows.sql")
+    @Sql("/db/insertTestRowsSki.sql")
     @Transactional
     public void delete() throws Exception {
         Long testId = 1L;
