@@ -15,9 +15,9 @@ import ru.skishop.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 @Slf4j
 @RequiredArgsConstructor
-@Service
 public class UserService {
 
     private final UserRepository userRepository;

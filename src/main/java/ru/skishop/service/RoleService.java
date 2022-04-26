@@ -7,8 +7,8 @@ import ru.skishop.repository.RoleRepository;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
