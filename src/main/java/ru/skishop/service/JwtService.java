@@ -29,7 +29,6 @@ public class JwtService {
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-        System.out.println(jwt);
         return new TokenWrapperDto(jwt);
     }
 

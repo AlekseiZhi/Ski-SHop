@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entity.Ski;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.SkiMapper;
 import ru.skishop.repository.SkiRepository;
 
@@ -30,13 +31,21 @@ public class SkiService {
     }
 
     public SkiDto edit(SkiDto skiDto) {
+        if (!skiRepository.existsById(skiDto.getId())) {
+            log.info("SkiService: Not found Ski by id = {}", skiDto.getId());
+            throw new NotFoundException("Not found Ski by id = " + skiDto.getId());
+        }
         Ski ski = skiMapper.toEntity(skiDto);
         ski = skiRepository.save(ski);
         return skiMapper.toSkiDto(ski);
     }
 
     public void delete(Long id) {
-        skiRepository.deleteById(id);
+        if (!skiRepository.existsById(id)) {
+            log.info("SkiService: Not found Ski by id = {}", id);
+            throw new NotFoundException("Not found Ski by id = " + id);
+        }
+            skiRepository.deleteById(id);
     }
 
     public SkiDto find(Long id){
