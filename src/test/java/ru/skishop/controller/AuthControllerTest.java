@@ -33,7 +33,7 @@ class AuthControllerTest {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRowsRole.sql")
+    @Sql("/db/insertTestRoleAndUser.sql")
     public void login() throws Exception {
 
         UserForAuthDto userForAuthDto = new UserForAuthDto();
@@ -56,7 +56,7 @@ class AuthControllerTest {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRowsRole.sql")
+    @Sql("/db/insertTestRoleAndUser.sql")
     public void negativeLogin() throws Exception {
 
         UserForAuthDto userForAuthDto = new UserForAuthDto();
@@ -72,7 +72,7 @@ class AuthControllerTest {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRowsRole.sql")
+    @Sql("/db/insertTestRoleAndUser.sql")
     void createNewUser() throws Exception {
 
         UserForAuthDto userForAuthDto = new UserForAuthDto();
@@ -96,7 +96,7 @@ class AuthControllerTest {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRowsRole.sql")
+    @Sql("/db/insertTestRoleAndUser.sql")
     void negativeCreateNewUser() throws Exception {
 
         UserForAuthDto userForAuthDto = new UserForAuthDto();

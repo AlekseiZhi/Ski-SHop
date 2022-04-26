@@ -42,7 +42,7 @@ public class SkiControllerTest {
 
     @Test
     @Transactional
-    @Sql("/db/insertTestRowsSki.sql")
+    @Sql("/db/insertTestSki.sql")
     public void findAllSkis() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(get("/ski"))
@@ -99,7 +99,7 @@ public class SkiControllerTest {
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRowsSki.sql")
+    @Sql("/db/insertTestSki.sql")
     @Transactional
     public void edit() throws Exception {
 
@@ -124,7 +124,7 @@ public class SkiControllerTest {
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRowsSki.sql")
+    @Sql("/db/insertTestSki.sql")
     @Transactional
     public void negativeIdEdit() throws Exception {
 
@@ -144,9 +144,9 @@ public class SkiControllerTest {
 
     @WithMockUser(roles = "admin")
     @Test
-    @Sql("/db/insertTestRowsSki.sql")
+    @Sql("/db/insertTestSki.sql")
     @Transactional
-    public void negativeEdit() throws Exception {
+    public void negativeFieldsEdit() throws Exception {
 
         SkiDto expected = new SkiDto();
         expected.setTitle("");
@@ -164,7 +164,7 @@ public class SkiControllerTest {
 
     @Test
     @WithMockUser(roles = "admin")
-    @Sql("/db/insertTestRowsSki.sql")
+    @Sql("/db/insertTestSki.sql")
     @Transactional
     public void delete() throws Exception {
         Long testId = 1L;
