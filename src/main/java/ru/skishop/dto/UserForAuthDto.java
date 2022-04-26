@@ -12,6 +12,7 @@ public class UserForAuthDto {
     private String fullName;
 
     @Email(message = "Email should be valid")
+    @NotEmpty
     private String email;
 
     @NotEmpty(message = "Password cannot be empty")

@@ -25,7 +25,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Login on Ski Shop"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public TokenWrapperDto dynamicBuilderGeneric(@Valid @RequestBody UserForAuthDto userForAuthDto) {
+    public TokenWrapperDto login(@Valid @RequestBody UserForAuthDto userForAuthDto) {
         return authService.login(userForAuthDto);
     }
 

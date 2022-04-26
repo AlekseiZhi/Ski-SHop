@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ControllerException {
 
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ErrorMessage notFoundException(NotFoundException exception) {
 
         return new ErrorMessage(new Date(), exception.getMessage());
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public ErrorMessage globalExceptionHandler(Exception exception) {
 
