@@ -28,7 +28,7 @@ public class SkiService {
         Pageable paging = PageRequest.of(page, pageSize);
         Page<Ski> pagedResult = skiRepository.findAll(paging);
         List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
-        return new PaginationWrapper(skiDtoList, page, pageSize, pagedResult.getTotalElements());
+        return new PaginationWrapper<>(skiDtoList, page, pageSize, pagedResult.getTotalElements(), pagedResult.getTotalPages());
     }
 
     public SkiDto create(SkiDto skiDto) {
