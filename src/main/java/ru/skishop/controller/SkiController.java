@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +31,10 @@ public class SkiController {
             @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<List<SkiDto>> findAllSkis() {
-        List<SkiDto> skis = skiService.findAllSkis();
-        return ResponseEntity.ok(skis);
+    public ResponseEntity<PaginationWrapper<SkiDto>> findAllSkis(@RequestParam(defaultValue = "0") Integer page,
+                                                                 @RequestParam(defaultValue = "3") Integer size) {
+        PaginationWrapper<SkiDto> paginationWrapper = skiService.getAllSkis(page, size);
+        return ResponseEntity.ok(paginationWrapper);
     }
 
     @PostMapping

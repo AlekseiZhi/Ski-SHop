@@ -2,7 +2,11 @@ package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entity.Ski;
 import ru.skishop.exceptionHandler.NotFoundException;
@@ -20,8 +24,11 @@ public class SkiService {
     private final SkiRepository skiRepository;
     private final SkiMapper skiMapper;
 
-    public List<SkiDto> findAllSkis() {
-        return skiRepository.findAll().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
+    public PaginationWrapper<SkiDto> getAllSkis(int page, int pageSize) {
+        Pageable paging = PageRequest.of(page, pageSize);
+        Page<Ski> pagedResult = skiRepository.findAll(paging);
+        List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
+        return new PaginationWrapper(skiDtoList, page, pageSize, pagedResult.getTotalElements());
     }
 
     public SkiDto create(SkiDto skiDto) {
@@ -45,10 +52,10 @@ public class SkiService {
             log.info("SkiService: Not found Ski by id = {}", id);
             throw new NotFoundException("Not found Ski by id = " + id);
         }
-            skiRepository.deleteById(id);
+        skiRepository.deleteById(id);
     }
 
-    public SkiDto find(Long id){
+    public SkiDto find(Long id) {
         return skiMapper.toSkiDto(skiRepository.findSkisById(id));
     }
 }

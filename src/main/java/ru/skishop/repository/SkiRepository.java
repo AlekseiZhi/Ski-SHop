@@ -1,10 +1,8 @@
 package ru.skishop.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import ru.skishop.entity.Ski;
-import ru.skishop.entity.User;
 
-public interface SkiRepository extends JpaRepository<Ski, Long> {
+public interface SkiRepository extends PagingAndSortingRepository<Ski, Long> {
     Ski findSkisById(Long id);
 }
-
