@@ -38,6 +38,17 @@ public class SkiController {
 //        return ResponseEntity.ok(paginationWrapper);
 //    }
 
+    @GetMapping
+    @Operation(summary = "Get list of skis")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
+    public ResponseEntity<PaginationWrapper<SkiDto>> getSkisWithCriteria(@Valid SkiPageableFilter skiPageableFilter) {
+        PaginationWrapper<SkiDto> paginationWrapper = skiService.getSkisWithCriteria(skiPageableFilter);
+        return ResponseEntity.ok(paginationWrapper);
+    }
+
     @PostMapping
     @RolesAllowed("admin")
     @Operation(summary = "Create new ski")
@@ -75,16 +86,5 @@ public class SkiController {
     public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    @RolesAllowed("admin")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
-            @ApiResponse(responseCode = "400", description = "Bad request")
-    })
-    public ResponseEntity<PaginationWrapper<SkiDto>> getSkisWithCriteria(@Valid SkiPageableFilter skiPageableFilter) {
-        PaginationWrapper<SkiDto> paginationWrapper = skiService.getSkisWithCriteria(skiPageableFilter);
-        return ResponseEntity.ok(paginationWrapper);
     }
 }
