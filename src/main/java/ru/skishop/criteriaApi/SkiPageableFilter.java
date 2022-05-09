@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SkiPageableFilter extends Pageble {
+public class SkiPageableFilter extends PageableParams {
 
     private String title;
     private String category;

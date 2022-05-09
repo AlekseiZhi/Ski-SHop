@@ -19,24 +19,24 @@ import javax.validation.constraints.Min;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ski")
+@RequestMapping("/skis")
 @Validated
 @Api(tags = "Ski Controller")
 public class SkiController {
 
     private final SkiService skiService;
 
-    @GetMapping
-    @Operation(summary = "Get list of skis")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
-            @ApiResponse(responseCode = "400", description = "Bad request")
-    })
-    public ResponseEntity<PaginationWrapper<SkiDto>> findAllSkis(@RequestParam(defaultValue = "0") Integer page,
-                                                                 @RequestParam(defaultValue = "3") Integer size) {
-        PaginationWrapper<SkiDto> paginationWrapper = skiService.getAllSkis(page, size);
-        return ResponseEntity.ok(paginationWrapper);
-    }
+//    @GetMapping
+//    @Operation(summary = "Get list of skis")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
+//            @ApiResponse(responseCode = "400", description = "Bad request")
+//    })
+//    public ResponseEntity<PaginationWrapper<SkiDto>> findAllSkis(@RequestParam(defaultValue = "0") Integer page,
+//                                                                 @RequestParam(defaultValue = "3") Integer size) {
+//        PaginationWrapper<SkiDto> paginationWrapper = skiService.getAllSkis(page, size);
+//        return ResponseEntity.ok(paginationWrapper);
+//    }
 
     @PostMapping
     @RolesAllowed("admin")
@@ -68,7 +68,7 @@ public class SkiController {
     @RolesAllowed("admin")
     @Operation(summary = "Delete ski")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Delete ski by id"),
+            @ApiResponse(responseCode = "204", description = "Delete ski by id"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
@@ -77,12 +77,11 @@ public class SkiController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/criteria")
+    @GetMapping
     @RolesAllowed("admin")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Delete ski by id"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "403", description = "You do not have access rights")
+            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
     })
     public ResponseEntity<PaginationWrapper<SkiDto>> getSkisWithCriteria(@Valid SkiPageableFilter skiPageableFilter) {
         PaginationWrapper<SkiDto> paginationWrapper = skiService.getSkisWithCriteria(skiPageableFilter);

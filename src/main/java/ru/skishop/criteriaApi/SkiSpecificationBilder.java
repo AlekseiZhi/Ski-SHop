@@ -1,5 +1,6 @@
 package ru.skishop.criteriaApi;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import ru.skishop.entity.Ski;
 
@@ -13,13 +14,13 @@ public class SkiSpecificationBilder {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (skiPageableFilter.getTitle() != null) {
+            if (StringUtils.isNotEmpty(skiPageableFilter.getTitle())) {
                 predicates.add(criteriaBuilder.equal(root.get("title"), skiPageableFilter.getTitle()));
             }
-            if (skiPageableFilter.getCategory() != null) {
+            if (StringUtils.isNotEmpty(skiPageableFilter.getCategory())) {
                 predicates.add(criteriaBuilder.equal(root.get("category"), skiPageableFilter.getCategory()));
             }
-            if (skiPageableFilter.getCompany() != null) {
+            if (StringUtils.isNotEmpty(skiPageableFilter.getCompany())) {
                 predicates.add(criteriaBuilder.equal(root.get("company"), skiPageableFilter.getCompany()));
             }
             if (skiPageableFilter.getLengthFrom() != null) {

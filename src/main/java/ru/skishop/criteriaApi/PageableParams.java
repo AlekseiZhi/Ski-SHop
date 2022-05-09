@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public abstract class Pageble {
+public abstract class PageableParams {
 
     @Min(0)
     @NotNull
