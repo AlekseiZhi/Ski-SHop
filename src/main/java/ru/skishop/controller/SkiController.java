@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.skishop.criteriaApi.SkiPageableFilter;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
@@ -74,5 +75,17 @@ public class SkiController {
     public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
         skiService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/criteria")
+    @RolesAllowed("admin")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Delete ski by id"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "403", description = "You do not have access rights")
+    })
+    public ResponseEntity<PaginationWrapper<SkiDto>> getSkisWithCriteria(@Valid SkiPageableFilter skiPageableFilter) {
+        PaginationWrapper<SkiDto> paginationWrapper = skiService.getSkisWithCriteria(skiPageableFilter);
+        return ResponseEntity.ok(paginationWrapper);
     }
 }
