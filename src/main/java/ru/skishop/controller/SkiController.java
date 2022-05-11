@@ -26,18 +26,6 @@ public class SkiController {
 
     private final SkiService skiService;
 
-//    @GetMapping
-//    @Operation(summary = "Get list of skis")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
-//            @ApiResponse(responseCode = "400", description = "Bad request")
-//    })
-//    public ResponseEntity<PaginationWrapper<SkiDto>> findAllSkis(@RequestParam(defaultValue = "0") Integer page,
-//                                                                 @RequestParam(defaultValue = "3") Integer size) {
-//        PaginationWrapper<SkiDto> paginationWrapper = skiService.getAllSkis(page, size);
-//        return ResponseEntity.ok(paginationWrapper);
-//    }
-
     @GetMapping
     @Operation(summary = "Get list of skis")
     @ApiResponses({
