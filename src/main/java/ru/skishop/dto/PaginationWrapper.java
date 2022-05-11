@@ -1,23 +1,24 @@
 package ru.skishop.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PaginationWrapper<T> {
 
-    private final int page;
-    private final int size;
-    private final List<T> data;
-    private final Long totalElements;
-    private final Integer currentPage;
-    private final Integer nextPage;
-    private final Integer prevPage;
-    private final Integer totalPages;
+    private int page;
+    private int size;
+    private List<T> data;
+    private Long totalElements;
+    private Integer currentPage;
+    private Integer nextPage;
+    private Integer prevPage;
+    private Integer totalPages;
 
-    public PaginationWrapper(@JsonProperty("data") List<T> data, @JsonProperty("page") int page, @JsonProperty("size") int size, @JsonProperty("totalElements") Long totalElements, @JsonProperty("totalPages") int totalPages) {
+    public PaginationWrapper(List<T> data, int page, int size, Long totalElements, int totalPages) {
         this.page = page;
         this.size = size;
         this.data = data;
