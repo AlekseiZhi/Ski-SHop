@@ -51,7 +51,6 @@ public class SkiService {
     }
 
     public PaginationWrapper<SkiDto> getSkisWithCriteria(SkiPageableFilter filter) {
-
         Pageable paging = PageRequest.of(filter.getPage(), filter.getSize());
         Page<Ski> pagedResult = skiRepository.findAll(SkiSpecificationBilder.buildSpecification(filter), paging);
         List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
