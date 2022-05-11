@@ -1,10 +1,8 @@
 package ru.skishop.criteriaApi;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class SkiPageableFilter extends PageableParams {
 
     private String title;
