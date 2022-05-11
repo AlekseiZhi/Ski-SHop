@@ -52,7 +52,7 @@ public class SkiControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        PaginationWrapper<SkiDto> paginationWrapper = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<PaginationWrapper<SkiDto>>() {
+        PaginationWrapper<SkiDto> paginationWrapper = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         Long totalElements = paginationWrapper.getTotalElements();
@@ -113,10 +113,10 @@ public class SkiControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        boolean expected = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<PaginationWrapper<SkiDto>>() {
+        boolean resultIsEmpty = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<PaginationWrapper<SkiDto>>() {
         }).getData().isEmpty();
 
-        Assertions.assertTrue(expected);
+        Assertions.assertTrue(resultIsEmpty);
     }
 
     @WithMockUser(roles = "admin")
