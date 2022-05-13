@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.skishop.criteriaApi.SkiPageableFilter;
+import ru.skishop.dto.request.SkiPageableFilter;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
@@ -22,7 +22,7 @@ import javax.validation.constraints.Min;
 @RequestMapping("/skis")
 @Validated
 @Api(tags = "Ski Controller")
-public class SkiController {
+public class SkisController {
 
     private final SkiService skiService;
 

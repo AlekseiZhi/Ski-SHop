@@ -6,12 +6,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.skishop.criteriaApi.SkiPageableFilter;
-import ru.skishop.criteriaApi.SkiSpecificationBilder;
+import ru.skishop.dto.request.SkiPageableFilter;
+import ru.skishop.repository.specification.SkiSpecificationBuilder;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entity.Ski;
-import ru.skishop.exceptionHandler.NotFoundException;
+import ru.skishop.exceptionhandler.NotFoundException;
 import ru.skishop.mapper.SkiMapper;
 import ru.skishop.repository.SkiRepository;
 
@@ -52,7 +52,7 @@ public class SkiService {
 
     public PaginationWrapper<SkiDto> getSkisWithCriteria(SkiPageableFilter filter) {
         Pageable paging = PageRequest.of(filter.getPage(), filter.getSize());
-        Page<Ski> pagedResult = skiRepository.findAll(SkiSpecificationBilder.buildSpecification(filter), paging);
+        Page<Ski> pagedResult = skiRepository.findAll(SkiSpecificationBuilder.buildSpecification(filter), paging);
         List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
         return new PaginationWrapper<>(skiDtoList, filter.getPage(), filter.getSize(), pagedResult.getTotalElements(), pagedResult.getTotalPages());
     }

@@ -1,4 +1,4 @@
-package ru.skishop.exceptionHandler;
+package ru.skishop.exceptionhandler;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

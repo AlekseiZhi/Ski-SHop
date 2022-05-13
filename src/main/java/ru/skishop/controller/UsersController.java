@@ -8,21 +8,36 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.skishop.dto.request.UserPageableFilter;
+import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.UserDto;
 import ru.skishop.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/users")
 @Validated
 @Api(tags = "User Controller")
 public class UsersController {
 
     private final UserService userService;
+
+//    @GetMapping
+//    @RolesAllowed("admin")
+//    @Operation(summary = "Get list of users")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "Get list of users from catalogue"),
+//            @ApiResponse(responseCode = "400", description = "Bad request"),
+//            @ApiResponse(responseCode = "403", description = "You do not have access rights")
+//    })
+//    public ResponseEntity<List<UserDto>> findAllUsers() {
+//        List<UserDto> users = userService.findAllUsers();
+//        return ResponseEntity.ok(users);
+//    }
 
     @GetMapping
     @RolesAllowed("admin")
@@ -32,9 +47,9 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
-    public ResponseEntity<List<UserDto>> findAllUsers() {
-        List<UserDto> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<PaginationWrapper<UserDto>> getUsersWithCriteria(@Valid UserPageableFilter userPageableFilter) {
+        PaginationWrapper<UserDto> paginationWrapper = userService.getUsersWithCriteria(userPageableFilter);
+        return ResponseEntity.ok(paginationWrapper);
     }
 
     @GetMapping("/{id}")

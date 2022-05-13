@@ -2,14 +2,16 @@ package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skishop.dto.RoleDto;
-import ru.skishop.dto.UserDto;
-import ru.skishop.dto.UserForAuthDto;
-import ru.skishop.entity.Role;
+import ru.skishop.dto.request.UserPageableFilter;
+import ru.skishop.repository.specification.UserSpecificationBuilder;
+import ru.skishop.dto.*;
 import ru.skishop.entity.User;
-import ru.skishop.exceptionHandler.NotFoundException;
+import ru.skishop.exceptionhandler.NotFoundException;
 import ru.skishop.mapper.UserMapper;
 import ru.skishop.repository.UserRepository;
 
@@ -26,11 +28,11 @@ public class UserService {
     private final RoleService roleService;
     private final UserMapper userMapper;
 
-    public List<UserDto> findAllUsers() {
-        return userRepository.findAllUsers().stream()
-                .map(userMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
+//    public List<UserDto> findAllUsers() {
+//        return userRepository.findAllUsers().stream()
+//                .map(userMapper::toUserDto)
+//                .collect(Collectors.toList());
+//    }
 
     public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
@@ -74,5 +76,12 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public PaginationWrapper<UserDto> getUsersWithCriteria(UserPageableFilter filter) {
+        Pageable paging = PageRequest.of(filter.getPage(), filter.getSize());
+        Page<User> pagedResult = userRepository.findAll(UserSpecificationBuilder.buildSpecification(filter),paging);
+        List<UserDto> userDtoList = pagedResult.getContent().stream().map(userMapper::toUserDto).collect(Collectors.toList());
+        return new PaginationWrapper<>(userDtoList, filter.getPage(), filter.getSize(), pagedResult.getTotalElements(), pagedResult.getTotalPages());
     }
 }

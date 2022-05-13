@@ -1,4 +1,4 @@
-package ru.skishop.exceptionHandler;
+package ru.skishop.exceptionhandler;
 
 public class NotFoundException extends RuntimeException {
 

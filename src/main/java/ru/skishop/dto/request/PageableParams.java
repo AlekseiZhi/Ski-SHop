@@ -1,4 +1,4 @@
-package ru.skishop.criteriaApi;
+package ru.skishop.dto.request;
 
 import lombok.Data;
 

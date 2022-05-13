@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(profiles = "testcontainers")
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
-public class SkiControllerTest {
+public class SkisControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
