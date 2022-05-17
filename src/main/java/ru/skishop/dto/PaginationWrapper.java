@@ -1,20 +1,22 @@
 package ru.skishop.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PaginationWrapper<T> {
 
-    private final int page;
-    private final int size;
-    private final List<T> data;
-    private final Long totalElements;
-    private final Integer currentPage;
-    private final Integer nextPage;
-    private final Integer prevPage;
-    private final Integer totalPages;
+    private int page;
+    private int size;
+    private List<T> data;
+    private Long totalElements;
+    private Integer currentPage;
+    private Integer nextPage;
+    private Integer prevPage;
+    private Integer totalPages;
 
     public PaginationWrapper(List<T> data, int page, int size, Long totalElements, int totalPages) {
         this.page = page;

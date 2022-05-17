@@ -16,12 +16,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
 import utils.HttpUtils;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,16 +43,80 @@ public class SkiControllerTest {
     @Test
     @Transactional
     @Sql("/db/insertTestSki.sql")
-    public void findAllSkis() throws Exception {
+    public void getSkisWithCriteria() throws Exception {
 
-        MvcResult mvcResult = mockMvc.perform(get("/ski"))
+        Integer page = 0;
+        Integer size = 2;
+
+        MvcResult mvcResult = mockMvc.perform(get("/skis?page={page}&size={size}", page, size))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<SkiDto> skis = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        PaginationWrapper<SkiDto> paginationWrapper = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        Assertions.assertEquals(skis.size(), 2);
+        Long totalElements = paginationWrapper.getTotalElements();
+
+        int skisOnPage = paginationWrapper.getData().size();
+
+        Integer prevPage = paginationWrapper.getPrevPage();
+
+        Integer nextPage = paginationWrapper.getNextPage();
+
+        Assertions.assertEquals(totalElements, 3);
+        Assertions.assertEquals(skisOnPage, 2);
+        Assertions.assertNull(prevPage);
+        Assertions.assertEquals(nextPage, 1);
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSki.sql")
+    public void negativeGetSkisWithCriteria() throws Exception {
+        Integer page = null;
+        Integer size = 0;
+
+        mockMvc.perform(get("/skis?page={page}&size={size}", page, size))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSki.sql")
+    public void skiPageableFilter() throws Exception {
+
+        Integer page = 0;
+        Integer size = 2;
+        String title = "marksmanTest1";
+
+        MvcResult mvcResult = mockMvc.perform(get("/skis?page={page}&size={size}&title={title}", page, size, title))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        SkiDto expected = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<PaginationWrapper<SkiDto>>() {
+        }).getData().get(0);
+
+        Assertions.assertEquals(expected.getTitle(), title);
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestSki.sql")
+    public void skiPageableFilterEmptyTitle() throws Exception {
+
+        Integer page = 0;
+        Integer size = 2;
+        String title = "mar";
+
+        MvcResult mvcResult = mockMvc.perform(get("/skis?page={page}&size={size}&title={title}", page, size, title))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        boolean resultIsEmpty = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<PaginationWrapper<SkiDto>>() {
+        }).getData().isEmpty();
+
+        Assertions.assertTrue(resultIsEmpty);
     }
 
     @WithMockUser(roles = "admin")
@@ -67,7 +131,7 @@ public class SkiControllerTest {
         expected.setLength(190);
         expected.setPrice(BigDecimal.valueOf(35000));
 
-        MvcResult mvcResult = mockMvc.perform(post("/ski")
+        MvcResult mvcResult = mockMvc.perform(post("/skis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isOk())
@@ -91,7 +155,7 @@ public class SkiControllerTest {
         expected.setLength(10);
         expected.setPrice(BigDecimal.valueOf(35));
 
-        mockMvc.perform(post("/ski")
+        mockMvc.perform(post("/skis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isBadRequest());
@@ -111,7 +175,7 @@ public class SkiControllerTest {
         expected.setPrice(BigDecimal.valueOf(35000));
         expected.setId(1L);
 
-        MvcResult mvcResult = mockMvc.perform(put("/ski")
+        MvcResult mvcResult = mockMvc.perform(put("/skis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isOk())
@@ -134,9 +198,9 @@ public class SkiControllerTest {
         expected.setCompany("k2");
         expected.setLength(190);
         expected.setPrice(BigDecimal.valueOf(35000));
-        expected.setId(3L);
+        expected.setId(4L);
 
-        mockMvc.perform(put("/ski")
+        mockMvc.perform(put("/skis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isNotFound());
@@ -156,7 +220,7 @@ public class SkiControllerTest {
         expected.setPrice(BigDecimal.valueOf(35000));
         expected.setId(1L);
 
-        mockMvc.perform(put("/ski")
+        mockMvc.perform(put("/skis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(OBJECT_MAPPER.writeValueAsString(expected)))
                 .andExpect(status().isBadRequest());
@@ -169,7 +233,7 @@ public class SkiControllerTest {
     public void delete() throws Exception {
         Long testId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/ski/{testId}", testId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", testId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -180,9 +244,9 @@ public class SkiControllerTest {
     @WithMockUser(roles = "admin")
     @Transactional
     public void negativeDelete() throws Exception {
-        Long testId = 2L;
+        Long testId = 4L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/ski/{testId}", testId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", testId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

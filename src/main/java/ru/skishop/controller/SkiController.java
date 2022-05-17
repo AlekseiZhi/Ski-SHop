@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.skishop.criteriaApi.SkiPageableFilter;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.service.SkiService;
@@ -18,7 +19,7 @@ import javax.validation.constraints.Min;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ski")
+@RequestMapping("/skis")
 @Validated
 @Api(tags = "Ski Controller")
 public class SkiController {
@@ -31,9 +32,8 @@ public class SkiController {
             @ApiResponse(responseCode = "200", description = "Get list of skis from catalogue"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<PaginationWrapper<SkiDto>> findAllSkis(@RequestParam(defaultValue = "0") Integer page,
-                                                                 @RequestParam(defaultValue = "3") Integer size) {
-        PaginationWrapper<SkiDto> paginationWrapper = skiService.getAllSkis(page, size);
+    public ResponseEntity<PaginationWrapper<SkiDto>> getSkisWithCriteria(@Valid SkiPageableFilter skiPageableFilter) {
+        PaginationWrapper<SkiDto> paginationWrapper = skiService.getSkisWithCriteria(skiPageableFilter);
         return ResponseEntity.ok(paginationWrapper);
     }
 
@@ -67,7 +67,7 @@ public class SkiController {
     @RolesAllowed("admin")
     @Operation(summary = "Delete ski")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Delete ski by id"),
+            @ApiResponse(responseCode = "204", description = "Delete ski by id"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })

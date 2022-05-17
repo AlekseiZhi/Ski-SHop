@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.skishop.criteriaApi.SkiPageableFilter;
+import ru.skishop.criteriaApi.SkiSpecificationBilder;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
 import ru.skishop.entity.Ski;
@@ -23,13 +25,6 @@ public class SkiService {
 
     private final SkiRepository skiRepository;
     private final SkiMapper skiMapper;
-
-    public PaginationWrapper<SkiDto> getAllSkis(int page, int pageSize) {
-        Pageable paging = PageRequest.of(page, pageSize);
-        Page<Ski> pagedResult = skiRepository.findAll(paging);
-        List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
-        return new PaginationWrapper<>(skiDtoList, page, pageSize, pagedResult.getTotalElements(), pagedResult.getTotalPages());
-    }
 
     public SkiDto create(SkiDto skiDto) {
         Ski ski = skiMapper.toEntity(skiDto);
@@ -53,6 +48,13 @@ public class SkiService {
             throw new NotFoundException("Not found Ski by id = " + id);
         }
         skiRepository.deleteById(id);
+    }
+
+    public PaginationWrapper<SkiDto> getSkisWithCriteria(SkiPageableFilter filter) {
+        Pageable paging = PageRequest.of(filter.getPage(), filter.getSize());
+        Page<Ski> pagedResult = skiRepository.findAll(SkiSpecificationBilder.buildSpecification(filter), paging);
+        List<SkiDto> skiDtoList = pagedResult.getContent().stream().map(skiMapper::toSkiDto).collect(Collectors.toList());
+        return new PaginationWrapper<>(skiDtoList, filter.getPage(), filter.getSize(), pagedResult.getTotalElements(), pagedResult.getTotalPages());
     }
 
     public SkiDto find(Long id) {
