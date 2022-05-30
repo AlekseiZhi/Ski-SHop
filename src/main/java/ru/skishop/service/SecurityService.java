@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.skishop.dto.UserInfoToken;
+import ru.skishop.entity.CurrentUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,11 +16,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SecurityService {
 
+    private final CurrentUser currentUser;
     private final JwtService jwtService;
 
     public void addToSecurityContext(String token) {
         UserInfoToken userInfoToken = jwtService.createTokenFromBearerToken(token);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userInfoToken.getId(), "", mapRolesToAuthorities(userInfoToken.getRoles()));
+        //currentUser.initialize(userInfoToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 

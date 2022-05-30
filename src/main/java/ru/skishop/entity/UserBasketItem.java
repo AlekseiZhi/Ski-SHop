@@ -1,6 +1,7 @@
 package ru.skishop.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,17 +9,18 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class UserBasketSki {
+@NoArgsConstructor
+public class UserBasketItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ski_id")
     private Ski ski;
 

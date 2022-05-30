@@ -19,6 +19,8 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
+    private static final int BEARER_HEADER_LENGTH = 7;
+
     public TokenWrapperDto createJwt(User user) {
         List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
         Claims claims = Jwts.claims();

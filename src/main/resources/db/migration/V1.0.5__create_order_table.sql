@@ -6,7 +6,7 @@ CREATE TABLE order_item
     amount INT NOT NULL
 );
 
-CREATE TABLE orderSki
+CREATE TABLE order_ski
 (
     id   SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users (id),
@@ -14,7 +14,7 @@ CREATE TABLE orderSki
     order_item INT NOT NULL REFERENCES order_item (id)
 );
 
-CREATE TABLE user_basket_ski
+CREATE TABLE user_basket_item
 (
     id   SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users (id),
@@ -22,4 +22,4 @@ CREATE TABLE user_basket_ski
     amount INT NOT NULL
 );
 
-ALTER TABLE order_item ADD order_id INT  REFERENCES orderSki (id);
+ALTER TABLE order_item ADD order_id INT  REFERENCES order_ski (id);
