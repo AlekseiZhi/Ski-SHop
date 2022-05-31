@@ -37,5 +37,4 @@ public class SecurityMockUtils {
         Mockito.when(currentUser.getRoles())
                 .thenReturn(List.of("admin"));
     }
-
 }

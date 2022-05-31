@@ -11,7 +11,6 @@ public class OrderService {
     private final UserBasketItemService userBasketItemService;
 
     public void create() {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
        // basketRepository.save(userBasketSki);
     }
