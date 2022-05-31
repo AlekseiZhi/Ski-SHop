@@ -11,6 +11,7 @@ import ru.skishop.entity.CurrentUser;
 import java.util.List;
 
 public class SecurityMockUtils {
+
     public static Answer<Void> replaceTokenProcess() {
         return invocation -> {
             UserInfoToken userInfo = new UserInfoToken(1L, "test@test.ru", List.of("admin"));
@@ -18,7 +19,7 @@ public class SecurityMockUtils {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userInfo.getId(),
                     userInfo.getEmail(),
-                    List.of(new SimpleGrantedAuthority("admin"))
+                    List.of(new SimpleGrantedAuthority("ROLE_admin"))
             );
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

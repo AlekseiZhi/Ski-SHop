@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 import ru.skishop.dto.UserInfoToken;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.List;
 
 @Data
@@ -20,5 +22,17 @@ public class CurrentUser {
         this.id = userInfoToken.getId();
         this.email = userInfoToken.getEmail();
         this.roles = userInfoToken.getRoles();
+    }
+
+
+    //оставил для проверки, что происходит с состоянием бина
+    @PostConstruct
+    public void create() {
+        System.out.println("CREATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE " + id);
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("DESTROYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY " + id);
     }
 }

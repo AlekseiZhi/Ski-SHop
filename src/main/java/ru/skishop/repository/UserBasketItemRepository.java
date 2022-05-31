@@ -33,7 +33,7 @@ public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, 
     @Query("UPDATE UserBasketItem u " +
             "SET u.amount = :skiAmount" +
             " WHERE u.ski.id= :skiId")
-    void editSkiAmount(Long skiId, int skiAmount);
+    int editSkiAmount(Long skiId, int skiAmount);
 
     void deleteAllByUserId(Long userId);
 
