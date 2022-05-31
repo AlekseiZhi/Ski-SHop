@@ -22,7 +22,7 @@ public class SecurityService {
     public void addToSecurityContext(String token) {
         UserInfoToken userInfoToken = jwtService.createTokenFromBearerToken(token);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userInfoToken.getId(), "", mapRolesToAuthorities(userInfoToken.getRoles()));
-        //currentUser.initialize(userInfoToken);
+        currentUser.initialize(userInfoToken);
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 

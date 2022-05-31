@@ -2,23 +2,18 @@ package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.hibernate5.SpringBeanContainer;
-import org.springframework.orm.hibernate5.SpringSessionContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.ContextLoader;
 import ru.skishop.dto.UserBasketItemDto;
 import ru.skishop.entity.CurrentUser;
 import ru.skishop.entity.Ski;
 import ru.skishop.entity.User;
 import ru.skishop.entity.UserBasketItem;
-import ru.skishop.mapper.SkiMapper;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.UserBasketItemMapper;
 import ru.skishop.repository.UserBasketItemRepository;
 
@@ -34,14 +29,7 @@ public class UserBasketItemService {
     private final UserBasketItemMapper userBasketItemMapper;
     private final CurrentUser currentUser;
 
-//    public List<UserBasketItemDto> getBasketForCurrentUser() {
-//        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        List<UserBasketItem> userBasketItems = userBasketItemRepository.findAllByUserId(userId);
-//        return userBasketItems.stream().map(userBasketItemMapper::toUserBasketItemDto).collect(Collectors.toList());
-//    }
-
     public List<UserBasketItemDto> getBasketForCurrentUser(int page, int size) {
-       // Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = currentUser.getId();
         Pageable paging = PageRequest.of(page, size);
         Page<UserBasketItem> pagedResult = userBasketItemRepository.findAllByUserId(userId, paging);
@@ -49,7 +37,7 @@ public class UserBasketItemService {
     }
 
     public UserBasketItemDto create(Long skiId) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = currentUser.getId();
         if (userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
             log.info("UserBasketItemService: this entry already exists");
             return null;
@@ -63,24 +51,33 @@ public class UserBasketItemService {
         }
     }
 
-
-    public void editSkiAmount(Long skiId, int skiAmount) {
-      userBasketItemRepository.editSkiAmount(skiId, skiAmount);
+    @Transactional
+    public UserBasketItemDto editSkiAmount(Long skiId, int skiAmount) {
+        Long userId = currentUser.getId();
+        if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
+            log.info("UserBasketItemService: Not found Ski by {}", skiId);
+            throw new NotFoundException("Not found Ski by id = " + skiId);
+        } else {
+            userBasketItemRepository.editSkiAmount(skiId, skiAmount);
+            UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
+            return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
+        }
     }
 
     @Transactional
     public void delete(Long skiId) {
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userBasketItemRepository.deleteUserBasketItemByUserIdAndSkiId(userId, skiId);
+        Long userId = currentUser.getId();
+        if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
+            log.info("UserBasketItemService: Not found Ski by {}", skiId);
+            throw new NotFoundException("Not found Ski by id = " + skiId);
+        } else {
+            userBasketItemRepository.deleteUserBasketItemByUserIdAndSkiId(userId, skiId);
+        }
     }
 
     @Transactional
-    public void clearDb() {
+    public void clearDbForCurrentUser() {
         Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userBasketItemRepository.deleteAllByUserId(userId);
     }
-
-//    public UserBasketItemDto findByUserIdAndSkiId(Long userId, Long skiId){
-//        findByUserIdAndSkiId()
-//    }
 }

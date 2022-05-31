@@ -5,14 +5,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.UserBasketItemDto;
 import ru.skishop.service.UserBasketItemService;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/baskets")
 public class UserBasketItemController {
 
@@ -35,8 +38,8 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "200", description = "Create new entry in the basket"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<UserBasketItemDto> create(@RequestParam("skiId") Long skiId) {
-       UserBasketItemDto userBasketItemDto = userBasketItemService.create(skiId);
+    public ResponseEntity<UserBasketItemDto> create(@RequestParam("skiId") @Min(1) Long skiId) {
+        UserBasketItemDto userBasketItemDto = userBasketItemService.create(skiId);
         return ResponseEntity.ok(userBasketItemDto);
     }
 
@@ -46,10 +49,10 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "200", description = "Edit ski amount"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> editAmount(@RequestParam("skiId") Long skiId,
-                                           @RequestParam("skiAmount") int skiAmount) {
-       userBasketItemService.editSkiAmount(skiId, skiAmount);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserBasketItemDto> editAmount(@RequestParam("skiId") @Min(1) Long skiId,
+                                                        @RequestParam("skiAmount") @Min(1) int skiAmount) {
+        UserBasketItemDto userBasketItemDto = userBasketItemService.editSkiAmount(skiId, skiAmount);
+        return ResponseEntity.ok(userBasketItemDto);
     }
 
     @DeleteMapping
@@ -58,7 +61,7 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "204", description = "Delete entry in the basket"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> delete(@RequestParam("skiId") Long skiId) {
+    public ResponseEntity<Void> delete(@RequestParam("skiId") @Min(1) Long skiId) {
         userBasketItemService.delete(skiId);
         return ResponseEntity.noContent().build();
     }
@@ -70,7 +73,7 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
     public ResponseEntity<Void> clearDbForCurrentUser() {
-        userBasketItemService.clearDb();
+        userBasketItemService.clearDbForCurrentUser();
         return ResponseEntity.noContent().build();
     }
 }
