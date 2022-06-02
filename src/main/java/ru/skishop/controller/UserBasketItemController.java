@@ -73,7 +73,7 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
     public ResponseEntity<Void> clearDbForCurrentUser() {
-        userBasketItemService.clearDbForCurrentUser();
+        userBasketItemService.clearBasketForCurrentUser();
         return ResponseEntity.noContent().build();
     }
 }

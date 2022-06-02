@@ -12,6 +12,5 @@ public class OrderDto {
 
     private Long id;
     private Date date;
-    private User user;
     private List<OrderItem> orderItems;
 }

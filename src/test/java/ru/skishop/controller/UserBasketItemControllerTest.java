@@ -37,9 +37,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserBasketItemControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private final MockMvc mockMvc;
     private final UserBasketItemService userBasketItemService;
-    private final String BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsIiwicm9sZXMiOlsiYWRtaW4iXX0.Q86rc5CfwturyaJLEDDJCEkYTas7K2uV6AWnAEmnp-s";
+    private final String BEARER_TOKEN = "Bearer mock_token";
 
     @MockBean
     private CurrentUser currentUser;
@@ -65,10 +66,12 @@ public class UserBasketItemControllerTest {
         List<UserBasketItemDto> userBasketItemDtoList = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        int actual = userBasketItemDtoList.get(0).getAmount();
+        //List<UserBasketItemDto> userBasketItemDtoList = HttpUtils.convertMvcResult(mvcResult,List.class);
+
+        int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
 
         Assertions.assertEquals(size, userBasketItemDtoList.size());
-        Assertions.assertEquals(1, actual);
+        Assertions.assertEquals(1, actualSkiAmount);
     }
 
     @Test
@@ -91,10 +94,12 @@ public class UserBasketItemControllerTest {
     @Transactional
     @Sql("/db/insertTestInfoForCreateUserBasketItem.sql")
     public void create() throws Exception {
+        Long skiId = 1L;
+
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        MvcResult mvcResult = mockMvc.perform(post("/baskets?skiId=1")
+        MvcResult mvcResult = mockMvc.perform(post("/baskets?skiId={skiId}", skiId)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -102,9 +107,9 @@ public class UserBasketItemControllerTest {
         UserBasketItemDto userBasketItemDtoList = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        int actual = userBasketItemDtoList.getAmount();
+        int actualSkiAmount = userBasketItemDtoList.getAmount();
 
-        Assertions.assertEquals(1, actual);
+        Assertions.assertEquals(1, actualSkiAmount);
     }
 
     @Test
@@ -124,20 +129,20 @@ public class UserBasketItemControllerTest {
     @Transactional
     public void editAmount() throws Exception {
         Long skiId = 1L;
-        int skiAmountExpected = 2;
+        int expectedSkiAmount = 2;
 
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(put("/baskets?skiId={skiId}&skiAmount={skiAmount}", skiId, skiAmountExpected)
+        mockMvc.perform(put("/baskets?skiId={skiId}&skiAmount={skiAmount}", skiId, expectedSkiAmount)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isOk())
                 .andReturn();
 
         List<UserBasketItemDto> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUser(0, 2);
-        int skiAmountActual = userBasketItemDtoList.get(0).getAmount();
+        int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
 
-        Assertions.assertEquals(skiAmountExpected, skiAmountActual);
+        Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
     }
 
     @Test
@@ -146,6 +151,21 @@ public class UserBasketItemControllerTest {
     public void negativeEditAmount() throws Exception {
         Long skiId = 0L;
         int skiAmountExpected = 2;
+
+        doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
+        SecurityMockUtils.mockCurrentUser(currentUser);
+
+        mockMvc.perform(put("/baskets?skiId={skiId}&skiAmount={skiAmount}", skiId, skiAmountExpected)
+                        .header("Authorization", BEARER_TOKEN))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Sql("/db/insertTestInfoForUserBasketItem.sql")
+    @Transactional
+    public void negativeEditWithNegativeAmount() throws Exception {
+        Long skiId = 1L;
+        int skiAmountExpected = -2;
 
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
@@ -167,6 +187,8 @@ public class UserBasketItemControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/baskets?skiId={skiId}", skiId)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
+
+        Assertions.assertNull(userBasketItemService.getUserBasketItem(currentUser.getId(),skiId));
     }
 
     @Test
@@ -186,12 +208,17 @@ public class UserBasketItemControllerTest {
     @Test
     @Sql("/db/insertTestInfoForUserBasketItem.sql")
     @Transactional
-    public void clearDbForCurrentUser() throws Exception {
+    public void clearBasketForCurrentUser() throws Exception {
+        int page = 0;
+        int size = 2;
+
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/baskets/clear")
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
+
+        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUser(page,size).isEmpty());
     }
 }

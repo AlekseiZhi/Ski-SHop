@@ -42,7 +42,7 @@ public class SkiControllerTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final MockMvc mockMvc;
     private final SkiService skiService;
-    private final String BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBtYWlsIiwicm9sZXMiOlsiYWRtaW4iXX0.Q86rc5CfwturyaJLEDDJCEkYTas7K2uV6AWnAEmnp-s";
+    private final String BEARER_TOKEN = "Bearer mock_token";
 
     @MockBean
     private SecurityService securityService;

@@ -2,6 +2,7 @@ package ru.skishop.exceptionHandler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityExistsException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,13 +19,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class ControllerException {
-
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public ErrorMessage notFoundException(NotFoundException exception) {
-
-        return new ErrorMessage(new Date(), exception.getMessage());
-    }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
@@ -52,10 +47,15 @@ public class ControllerException {
                 .collect(Collectors.toList());
     }
 
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
-    public ErrorMessage forbiddenExceptionHandler(AccessDeniedException exception) {
+    public ResponseEntity<ErrorMessage> forbiddenExceptionHandler(AccessDeniedException exception) {
+    ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        return ResponseEntity.ok(message);
+    }
 
-        return new ErrorMessage(new Date(), exception.getMessage());
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorMessage> apiException(ApiException exception) {
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        return ResponseEntity.status(exception.getHttpStatus()).body(message);
     }
 }

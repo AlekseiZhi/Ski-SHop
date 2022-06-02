@@ -9,11 +9,11 @@ import ru.skishop.service.OrderService;
 @RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
+
     private final OrderService orderService;
 
     @PostMapping("/{basketId}")
     public ResponseEntity<Void> create(@PathVariable("basketId") Long basketId) {
-
         return ResponseEntity.ok().build();
     }
 }
