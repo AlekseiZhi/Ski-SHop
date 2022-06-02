@@ -16,6 +16,15 @@ public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, 
 
     void deleteUserBasketItemByUserIdAndSkiId(Long userId, Long skiId);
 
+//    Page<UserBasketItem> findAllByUserId(Long userId, Pageable pageable);
+
+    @Query(value = "select ubi " +
+            "from UserBasketItem ubi " +
+            "join fetch ubi.ski s " +
+            "join fetch ubi.user u " +
+            "where u.id = :userId",
+            countQuery = "select count(ubi) from UserBasketItem ubi where ubi.user.id = :userId"
+    )
     Page<UserBasketItem> findAllByUserId(Long userId, Pageable pageable);
 
     boolean existsByUserIdAndSkiId(Long userId, Long skiId);
