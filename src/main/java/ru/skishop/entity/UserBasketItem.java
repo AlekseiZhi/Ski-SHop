@@ -16,13 +16,11 @@ public class UserBasketItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    // @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "ski_id")
     private Ski ski;
 

@@ -29,11 +29,16 @@ public class UserBasketItemService {
     private final UserBasketItemMapper userBasketItemMapper;
     private final CurrentUser currentUser;
 
-    public List<UserBasketItemDto> getBasketForCurrentUser(int page, int size) {
+    public List<UserBasketItemDto> getBasketForCurrentUserPagging(int page, int size) {
         Long userId = currentUser.getId();
         Pageable paging = PageRequest.of(page, size);
         Page<UserBasketItem> pagedResult = userBasketItemRepository.findAllByUserId(userId, paging);
         return pagedResult.getContent().stream().map(userBasketItemMapper::toUserBasketItemDto).collect(Collectors.toList());
+    }
+
+    public List<UserBasketItem> getBasketForCurrentUser() {
+        Long userId = currentUser.getId();
+        return userBasketItemRepository.findAllByUserId(userId);
     }
 
     public UserBasketItemDto create(Long skiId) {
@@ -42,12 +47,12 @@ public class UserBasketItemService {
             log.info("UserBasketItemService: entry with skiId = {} number already exists", skiId);
             throw new EntityExistException("Entry already exists");
         }
-            UserBasketItem userBasketItem = new UserBasketItem();
-            userBasketItem.setSki(new Ski(skiId));
-            userBasketItem.setAmount(1);
-            userBasketItem.setUser(new User(userId));
-            userBasketItem = userBasketItemRepository.save(userBasketItem);
-            return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
+        UserBasketItem userBasketItem = new UserBasketItem();
+        userBasketItem.setSki(new Ski(skiId));
+        userBasketItem.setAmount(1);
+        userBasketItem.setUser(new User(userId));
+        userBasketItem = userBasketItemRepository.save(userBasketItem);
+        return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
     }
 
     @Transactional
@@ -55,11 +60,11 @@ public class UserBasketItemService {
         Long userId = currentUser.getId();
         if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
             log.info("UserBasketItemService: Not found Ski by {}", skiId);
-            throw new NotFoundException("Not found Ski by id = " + skiId, 404);
+            throw new NotFoundException("Not found Ski by id = " + skiId);
         }
-            userBasketItemRepository.editSkiAmount(skiId, skiAmount);
-            UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
-            return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
+        userBasketItemRepository.editSkiAmount(skiId, skiAmount);
+        UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
+        return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
     }
 
     @Transactional
@@ -78,8 +83,8 @@ public class UserBasketItemService {
         userBasketItemRepository.deleteAllByUserId(userId);
     }
 
-    public UserBasketItemDto getUserBasketItem(Long userId, Long skiId){
-      UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
-      return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
+    public UserBasketItemDto getUserBasketItem(Long userId, Long skiId) {
+        UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
+        return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
     }
 }

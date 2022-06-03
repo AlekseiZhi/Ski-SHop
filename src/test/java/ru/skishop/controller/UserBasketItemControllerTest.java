@@ -66,8 +66,6 @@ public class UserBasketItemControllerTest {
         List<UserBasketItemDto> userBasketItemDtoList = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        //List<UserBasketItemDto> userBasketItemDtoList = HttpUtils.convertMvcResult(mvcResult,List.class);
-
         int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
 
         Assertions.assertEquals(size, userBasketItemDtoList.size());
@@ -139,7 +137,7 @@ public class UserBasketItemControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<UserBasketItemDto> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUser(0, 2);
+        List<UserBasketItemDto> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUserPagging(0, 2);
         int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
 
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
@@ -219,6 +217,6 @@ public class UserBasketItemControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUser(page,size).isEmpty());
+        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUserPagging(page,size).isEmpty());
     }
 }

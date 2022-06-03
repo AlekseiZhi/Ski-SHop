@@ -4,10 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class EntityExistException extends ApiException {
 
-    public EntityExistException(String message, int httpStatus) {
-        super(message, httpStatus);
-    }
-
     public EntityExistException(String message) {
         super(message, HttpStatus.BAD_REQUEST.value());
     }

@@ -4,23 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
 
 @Getter
 @Setter
 @Entity
+@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date date;
+
+    @Column(name = "order_date")
+    private Instant date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private List<OrderItem> orderItems;
 }

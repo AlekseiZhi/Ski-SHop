@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.persistence.EntityExistsException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public class ControllerException {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> forbiddenExceptionHandler(AccessDeniedException exception) {
-    ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
+        ErrorMessage message = new ErrorMessage(new Date(), exception.getMessage());
         return ResponseEntity.ok(message);
     }
 

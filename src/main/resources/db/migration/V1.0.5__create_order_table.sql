@@ -1,16 +1,16 @@
-CREATE TABLE order_item
-(
-    id   SERIAL PRIMARY KEY,
-    ski_id INT NOT NULL REFERENCES skis (id),
-    amount INT NOT NULL
-);
-
-CREATE TABLE order_ski
+CREATE TABLE orders
 (
     id   SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users (id),
-    order_date timestamp,
-    order_item INT NOT NULL REFERENCES order_item (id)
+    order_date timestamp
+);
+
+CREATE TABLE order_items
+(
+    id   SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users (id),
+    ski_id INT NOT NULL REFERENCES skis (id),
+    amount INT NOT NULL
 );
 
 CREATE TABLE user_basket_item

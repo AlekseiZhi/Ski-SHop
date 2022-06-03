@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.skishop.entity.UserBasketItem;
 
+import java.util.List;
+
 @Repository
 public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, Long>, JpaSpecificationExecutor<UserBasketItem> {
 
@@ -16,7 +18,21 @@ public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, 
 
     void deleteUserBasketItemByUserIdAndSkiId(Long userId, Long skiId);
 
+    @Query(value = "select ubi " +
+            "from UserBasketItem ubi " +
+            "join fetch ubi.ski s " +
+            "join fetch ubi.user u " +
+            "where u.id = :userId",
+            countQuery = "select count(ubi) from UserBasketItem ubi where ubi.user.id = :userId"
+    )
     Page<UserBasketItem> findAllByUserId(Long userId, Pageable pageable);
+
+    @Query(value = "select ubi " +
+            "from UserBasketItem ubi " +
+            "join fetch ubi.ski s " +
+            "join fetch ubi.user u " +
+            "where u.id = :userId")
+    List<UserBasketItem> findAllByUserId(Long userId);
 
     boolean existsByUserIdAndSkiId(Long userId, Long skiId);
 
@@ -24,8 +40,7 @@ public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, 
     @Query("UPDATE UserBasketItem u " +
             "SET u.amount = :skiAmount" +
             " WHERE u.ski.id= :skiId")
-    int editSkiAmount(Long skiId, int skiAmount);
+    void editSkiAmount(Long skiId, int skiAmount);
 
     void deleteAllByUserId(Long userId);
-
 }
