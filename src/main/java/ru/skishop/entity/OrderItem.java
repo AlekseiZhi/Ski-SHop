@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Setter
 @Getter
-@Table(name = "order_items")
+@Table(name = "order_item")
 public class OrderItem {
 
     @Id
@@ -23,4 +23,8 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "ski_id")
     private Ski ski;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

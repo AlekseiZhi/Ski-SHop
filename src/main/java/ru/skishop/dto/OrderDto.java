@@ -10,5 +10,5 @@ public class OrderDto {
 
     private Long id;
     private Instant date;
-    private List<OrderItemDto> orderItemDtoList;
+    private List<OrderItemDto> items;
 }

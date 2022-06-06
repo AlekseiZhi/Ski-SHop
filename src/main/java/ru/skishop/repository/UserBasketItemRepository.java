@@ -37,8 +37,8 @@ public interface UserBasketItemRepository extends JpaRepository<UserBasketItem, 
     boolean existsByUserIdAndSkiId(Long userId, Long skiId);
 
     @Modifying
-    @Query("UPDATE UserBasketItem u " +
-            "SET u.amount = :skiAmount" +
+    @Query("UPDATE UserBasketItem u" +
+            " SET u.amount = :skiAmount" +
             " WHERE u.ski.id= :skiId")
     void editSkiAmount(Long skiId, int skiAmount);
 
