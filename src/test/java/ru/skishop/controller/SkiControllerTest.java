@@ -40,9 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SkiControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final String BEARER_TOKEN = "Bearer mock_token";
     private final MockMvc mockMvc;
     private final SkiService skiService;
-    private final String BEARER_TOKEN = "Bearer mock_token";
+
 
     @MockBean
     private SecurityService securityService;

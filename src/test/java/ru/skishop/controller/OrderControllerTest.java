@@ -38,11 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
+    private static final String BEARER_TOKEN = "Bearer mock_token";
     private final MockMvc mockMvc;
-    private final UserBasketItemService userBasketItemService;
-    private final String BEARER_TOKEN = "Bearer mock_token";
-    private final OrderService orderService;
 
     @MockBean
     private CurrentUser currentUser;
