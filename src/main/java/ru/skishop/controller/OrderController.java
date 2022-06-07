@@ -56,15 +56,15 @@ public class OrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping
     @RolesAllowed("admin")
     @Operation(summary = "Delete order")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Delete order"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> delete(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
-        orderService.delete(id);
+    public ResponseEntity<Void> delete(@RequestParam("orderId") @Min(message = "value must be greater than 0", value = 1) Long orderId) {
+        orderService.delete(orderId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -13,15 +13,17 @@ VALUES (1, 'admin@mail', 'admin', '$2a$10$thwp32FYaBkCI9.zaJW.ReR90HTPywIveWoApd
        (2, 'user@mail', 'user', '$2a$10$thwp32FYaBkCI9.zaJW.ReR90HTPywIveWoApdjA/.2NTmuMjaGoi');
 
 INSERT INTO user_basket_item (id, user_id, ski_id, amount)
-VALUES (1, 1, 1, 1),
+VALUES (1, 1, 1, 5),
        (2, 1, 2, 2),
        (3, 2, 1, 1),
        (4, 2, 2, 2);
 
-INSERT INTO orders (id, user_id, order_date)
-VALUES (1, 1, '2022-06-06 18:38:49.200245'),
-       (2, 1, '2022-06-06 18:38:49.200245');
-
-INSERT INTO order_item (id, user_id, ski_id, amount, order_id)
-VALUES (1, 1, 1, 1, 1),
-       (2, 1, 2, 1, 1);
+-- INSERT INTO orders (id, user_id, order_date)
+-- VALUES (1, 1, '2022-06-06 18:38:49.200245'),
+--        (2, 1, '2022-06-06 18:38:49.200245');
+--
+-- INSERT INTO order_item (id, user_id, ski_id, amount, order_id)
+-- VALUES (1, 1, 1, 3, 1),
+--        (2, 1, 2, 1, 1),
+--        (3, 1, 1, 1, 2),
+--        (4, 1, 2, 1, 2);

@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN FETCH ord.orderItemList ori " +
             "WHERE ord.user.id = :userId")
     List<Order> findAllByUserId(Long userId);
+
+    Order findOrderById(Long orderId);
 }

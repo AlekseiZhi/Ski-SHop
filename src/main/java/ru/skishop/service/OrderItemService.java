@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderItemService {
+
     private final OrderItemRepository orderItemRepository;
 
     @Transactional
@@ -37,4 +38,11 @@ public class OrderItemService {
 //        }
         orderItemRepository.editSkiAmount(orderId, skiId, skiAmount);
     }
+
+    @Transactional
+    public void delete(Long orderId){
+
+        orderItemRepository.deleteByOrderId(orderId);
+    }
+
 }

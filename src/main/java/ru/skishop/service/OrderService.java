@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.skishop.dto.OrderDto;
 import ru.skishop.dto.OrderItemDto;
 import ru.skishop.entity.*;
+import ru.skishop.exceptionHandler.EntityExistException;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.OrderItemMapper;
 import ru.skishop.mapper.OrderMapper;
 import ru.skishop.repository.OrderRepository;
@@ -32,6 +34,11 @@ public class OrderService {
 
         List<Order> orderList = orderRepository.findAllByUserId(userId);
         return orderList.stream().map(orderMapper::toOrderDto).collect(Collectors.toList());
+    }
+
+    public OrderDto findOrderById(Long orderId){
+        Order order = orderRepository.findOrderById(orderId);
+        return orderMapper.toOrderDto(order);
     }
 
     @Transactional
@@ -62,12 +69,23 @@ public class OrderService {
 
     @Transactional
     public OrderDto edit(Long orderId, Long skiId, int skiAmount){
+        if (!orderRepository.existsById(orderId)) {
+            log.info("OrderService: Not found order by id = {}", orderId);
+            throw new NotFoundException("Not found order by id = " + orderId);
+        }
+
         orderItemService.edit(orderId, skiId, skiAmount);
         Order order = orderRepository.getById(orderId);
         return orderMapper.toOrderDto(order);
     }
 
+    @Transactional
     public void delete(Long orderId){
+//        if (!orderRepository.existsById(orderId)) {
+//            log.info("OrderService: Not found order by id = {}", orderId);
+//            throw new NotFoundException("Not found order by id = " + orderId);
+//        }
+        orderItemService.delete(orderId);
         orderRepository.deleteById(orderId);
     }
 }

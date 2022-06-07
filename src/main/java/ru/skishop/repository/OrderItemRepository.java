@@ -14,4 +14,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             " SET o.amount = :skiAmount" +
             " WHERE o.ski.id= :skiId AND o.order.id = :orderId")
     void editSkiAmount(Long orderId, Long skiId, int skiAmount);
+
+    void deleteByOrderId(Long orderId);
 }
