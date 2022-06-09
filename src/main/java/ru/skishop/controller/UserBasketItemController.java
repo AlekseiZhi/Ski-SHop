@@ -28,7 +28,7 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     public ResponseEntity<List<UserBasketItemDto>> getBasketForCurrentUser(int page, int size) {
-        List<UserBasketItemDto> paging = userBasketItemService.getBasketForCurrentUserPagging(page, size);
+        List<UserBasketItemDto> paging = userBasketItemService.getBasketForCurrentUserPaging(page, size);
         return ResponseEntity.ok(paging);
     }
 

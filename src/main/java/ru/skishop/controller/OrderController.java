@@ -63,7 +63,7 @@ public class OrderController {
             @ApiResponse(responseCode = "204", description = "Delete order"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> delete(@RequestParam("orderId") @Min(message = "value must be greater than 0", value = 1) Long orderId) {
+    public ResponseEntity<Void> delete(@RequestParam("orderId") @Min(1) Long orderId) {
         orderService.delete(orderId);
         return ResponseEntity.noContent().build();
     }

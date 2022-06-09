@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
@@ -40,11 +41,20 @@ public class UserService {
         return user;
     }
 
-    public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> {
-            log.info("UserService: Not found User by id = {}", id);
-            throw new NotFoundException("Not found User by id = " + id);
-        });
+//    public UserDto findById(Long id) {
+//        User user = userRepository.findById(id).orElseThrow(() -> {
+//            log.info("UserService: Not found User by id = {}", id);
+//            throw new NotFoundException("Not found User by id = " + id);
+//        });
+//        return userMapper.toUserDto(user);
+//    }
+
+    public UserDto findById(Long userId) {
+        User user = userRepository.findUserById(userId);
+        if (userRepository.findUserById(userId)==null){
+            log.info("UserService: Not found User by id = {}", userId);
+            throw new NotFoundException("Not found User by id = " + userId);
+        }
         return userMapper.toUserDto(user);
     }
 
@@ -52,6 +62,7 @@ public class UserService {
         return createOrUpdate(userDto);
     }
 
+    @Transactional
     public User createNewUser(UserForAuthDto userForAuthDto) {
         User user = userMapper.toEntity(userForAuthDto);
         user.setRoles(List.of(roleService.getDefaultRole()));
@@ -59,6 +70,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public UserDto editUser(UserDto userDto) {
         return createOrUpdate(userDto);
     }
@@ -71,7 +83,12 @@ public class UserService {
         return userMapper.toUserDto(userRepository.save(user));
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    @Transactional
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            log.info("UserService: Not found user by id = {}", userId);
+            throw new NotFoundException("Not found user by id = " + userId);
+        }
+        userRepository.deleteById(userId);
     }
 }

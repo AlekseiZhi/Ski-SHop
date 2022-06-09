@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skishop.dto.UserBasketItemDto;
 import ru.skishop.entity.CurrentUser;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.service.SecurityService;
 import ru.skishop.service.UserBasketItemService;
+import utils.HttpUtils;
 import utils.SecurityMockUtils;
 
 import java.util.List;
@@ -62,13 +64,14 @@ public class UserBasketItemControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<UserBasketItemDto> userBasketItemDtoList = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<UserBasketItemDto> actualUserBasketItemDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
+        int actualSkiAmount = actualUserBasketItemDtos.get(0).getAmount();
+        int expectedSkiAmount = 1;
 
-        Assertions.assertEquals(size, userBasketItemDtoList.size());
-        Assertions.assertEquals(1, actualSkiAmount);
+        Assertions.assertEquals(size, actualUserBasketItemDtos.size());
+        Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
     }
 
     @Test
@@ -101,12 +104,16 @@ public class UserBasketItemControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        UserBasketItemDto userBasketItemDtoList = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        UserBasketItemDto userBasketItemDto = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        int actualSkiAmount = userBasketItemDtoList.getAmount();
+        int actualSkiAmount = userBasketItemDto.getAmount();
+        Long actualUserBasketItemId = userBasketItemDto.getId();
+        int expectedSkiAmount = 1;
 
-        Assertions.assertEquals(1, actualSkiAmount);
+        Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
+        Assertions.assertNotNull(actualUserBasketItemId);
+        Assertions.assertNotNull(userBasketItemService.findById(actualUserBasketItemId));
     }
 
     @Test
@@ -131,15 +138,17 @@ public class UserBasketItemControllerTest {
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(put("/baskets?skiId={skiId}&skiAmount={skiAmount}", skiId, expectedSkiAmount)
+        MvcResult mvcResult = mockMvc.perform(put("/baskets?skiId={skiId}&skiAmount={skiAmount}", skiId, expectedSkiAmount)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<UserBasketItemDto> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUserPagging(0, 2);
-        int actualSkiAmount = userBasketItemDtoList.get(0).getAmount();
+        UserBasketItemDto userBasketItemDto = HttpUtils.convertMvcResult(mvcResult, UserBasketItemDto.class);
+        List<UserBasketItemDto> actualUserBasketItemDtoList = userBasketItemService.getBasketForCurrentUserPaging(0, 2);
+        int actualSkiAmount = actualUserBasketItemDtoList.get(0).getAmount();
 
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
+        Assertions.assertEquals(expectedSkiAmount, userBasketItemDto.getAmount());
     }
 
     @Test
@@ -185,7 +194,7 @@ public class UserBasketItemControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertNull(userBasketItemService.getUserBasketItem(currentUser.getId(),skiId));
+        Assertions.assertThrows(NotFoundException.class, () -> userBasketItemService.getBasketItem(currentUser.getId(), skiId));
     }
 
     @Test
@@ -216,6 +225,6 @@ public class UserBasketItemControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUserPagging(page,size).isEmpty());
+        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUserPaging(page, size).isEmpty());
     }
 }

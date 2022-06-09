@@ -29,7 +29,7 @@ public class UserBasketItemService {
     private final UserBasketItemMapper userBasketItemMapper;
     private final CurrentUser currentUser;
 
-    public List<UserBasketItemDto> getBasketForCurrentUserPagging(int page, int size) {
+    public List<UserBasketItemDto> getBasketForCurrentUserPaging(int page, int size) {
         Long userId = currentUser.getId();
         Pageable paging = PageRequest.of(page, size);
         Page<UserBasketItem> pagedResult = userBasketItemRepository.findAllByUserId(userId, paging);
@@ -39,6 +39,23 @@ public class UserBasketItemService {
     public List<UserBasketItem> getBasketForCurrentUser() {
         Long userId = currentUser.getId();
         return userBasketItemRepository.findAllByUserId(userId);
+    }
+
+    public UserBasketItemDto getBasketItem(Long userId, Long skiId) {
+        if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
+            log.info("UserBasketItemService: entry with userId = {} and skiId = {} number not found",userId, skiId);
+            throw new NotFoundException("Entry number not found with userId = "+ userId + " and skiId = " + skiId);
+        }
+        UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
+        return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
+    }
+
+    public UserBasketItem findById(Long userBasketItemId){
+        if(!userBasketItemRepository.existsUserBasketItemById(userBasketItemId)){
+            log.info("UserBasketItemService: entry with userBasketItemId = {} number not found",userBasketItemId);
+            throw new NotFoundException("Entry number not found with userBasketItemId = "+ userBasketItemId);
+        }
+        return userBasketItemRepository.findUserBasketItemById(userBasketItemId);
     }
 
     public UserBasketItemDto create(Long skiId) {
@@ -81,10 +98,5 @@ public class UserBasketItemService {
     public void clearBasketForCurrentUser() {
         Long userId = currentUser.getId();
         userBasketItemRepository.deleteAllByUserId(userId);
-    }
-
-    public UserBasketItemDto getUserBasketItem(Long userId, Long skiId) {
-        UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
-        return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
     }
 }

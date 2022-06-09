@@ -16,4 +16,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     void editSkiAmount(Long orderId, Long skiId, int skiAmount);
 
     void deleteByOrderId(Long orderId);
+
+    boolean existsOrderItemByOrderId(Long orderId);
+
+    boolean existsOrderItemBySkiId(Long skiId);
 }

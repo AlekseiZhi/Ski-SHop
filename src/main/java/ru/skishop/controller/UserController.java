@@ -20,7 +20,8 @@ import java.util.List;
 @RestController
 @Validated
 @Api(tags = "User Controller")
-public class UsersController {
+@RequestMapping("/users")
+public class UserController {
 
     private final UserService userService;
 
@@ -32,7 +33,7 @@ public class UsersController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
-    public ResponseEntity<List<UserDto>> findAllUsers() {
+    public ResponseEntity<List<UserDto>> findAll() {
         List<UserDto> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }

@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.skishop.entity.CurrentUser;
 import ru.skishop.entity.OrderItem;
-import ru.skishop.entity.UserBasketItem;
 import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.repository.OrderItemRepository;
 
@@ -30,19 +28,24 @@ public class OrderItemService {
     }
 
     @Transactional
-    public void edit(Long orderId, Long skiId, int skiAmount){
-//        Long userId = currentUser.getId();
-//        if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
-//            log.info("UserBasketItemService: Not found Ski by {}", skiId);
-//            throw new NotFoundException("Not found Ski by id = " + skiId);
-//        }
+    public void edit(Long orderId, Long skiId, int skiAmount) {
+        if (!orderItemRepository.existsOrderItemByOrderId(orderId)) {
+            log.info("OrderItemService: Not found orderItem by orderId = {}", orderId);
+            throw new NotFoundException("Not found orderItem by orderId = " + orderId);
+        }
+        if (!orderItemRepository.existsOrderItemBySkiId(skiId)) {
+            log.info("OrderItemService: Not found orderItem by skiId = {}", skiId);
+            throw new NotFoundException("Not found orderItem by skiId = " + skiId);
+        }
         orderItemRepository.editSkiAmount(orderId, skiId, skiAmount);
     }
 
     @Transactional
-    public void delete(Long orderId){
-
+    public void delete(Long orderId) {
+        if (!orderItemRepository.existsById(orderId)) {
+            log.info("OrderItemService: Not found orderItem by orderId = {}", orderId);
+            throw new NotFoundException("Not found orderItem by orderId = " + orderId);
+        }
         orderItemRepository.deleteByOrderId(orderId);
     }
-
 }

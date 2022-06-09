@@ -252,7 +252,6 @@ public class SkiControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
     @Sql("/db/insertTestSki.sql")
     @Transactional
     public void delete() throws Exception {
@@ -269,7 +268,6 @@ public class SkiControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "admin")
     @Transactional
     public void negativeDelete() throws Exception {
         Long testId = 4L;

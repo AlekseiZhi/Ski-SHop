@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrderControllerTest {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
-    ;
+
     private static final String BEARER_TOKEN = "Bearer mock_token";
     private final MockMvc mockMvc;
     private final OrderService orderService;
@@ -62,14 +62,14 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<OrderDto> orderDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<OrderDto> actualOrderDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         int expectedOrderSize = 2;
         int expectedSkiAmount = 3;
-        int actualSkiAmount = orderDtos.get(0).getItems().get(0).getAmount();
+        int actualSkiAmount = actualOrderDtos.get(0).getItems().get(0).getAmount();
 
-        Assertions.assertEquals(expectedOrderSize, orderDtos.size());
+        Assertions.assertEquals(expectedOrderSize, actualOrderDtos.size());
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
     }
 
@@ -88,13 +88,21 @@ public class OrderControllerTest {
         OrderDto actualOrderDto = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        List<OrderDto> orderDtos = orderService.getOrderForCurrentUser();
-
-        int expectedOrderSize = 1;
         int expectedSkiAmount = 5;
 
         Assertions.assertEquals(expectedSkiAmount, actualOrderDto.getItems().get(0).getAmount());
-        Assertions.assertEquals(expectedOrderSize, orderDtos.size());
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestInfoForCreateUserBasketItem.sql")
+    public void negativeCreate() throws Exception {
+        doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
+        SecurityMockUtils.mockCurrentUser(currentUser);
+
+        mockMvc.perform(post("/orders/buy")
+                        .header("Authorization", BEARER_TOKEN))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -116,19 +124,45 @@ public class OrderControllerTest {
         OrderDto actualOrderDto = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        List<OrderDto> orderDtos = orderService.getOrderForCurrentUser();
-
-        int expectedOrderSize = 2;
         int expectedSkiAmount = 11;
 
         Assertions.assertEquals(expectedSkiAmount, actualOrderDto.getItems().get(1).getAmount());
-        Assertions.assertEquals(expectedSkiAmount, orderDtos.get(0).getItems().get(1).getAmount());
-        Assertions.assertEquals(expectedOrderSize, orderDtos.size());
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestOrders.sql")
+    public void negativeEditWithBadOrderId() throws Exception {
+        Long orderId = 0L;
+        Long skiId = 1L;
+        int skiAmount = 11;
+
+        doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
+        SecurityMockUtils.mockCurrentUser(currentUser);
+
+        mockMvc.perform(put("/orders?orderId={orderId}&skiId={skiId}&skiAmount={skiAmount}", orderId, skiId, skiAmount)
+                        .header("Authorization", BEARER_TOKEN))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    @Sql("/db/insertTestOrders.sql")
+    public void negativeEditWithBadSkiId() throws Exception {
+        Long orderId = 1L;
+        Long skiId = 0L;
+        int skiAmount = 11;
+
+        doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
+        SecurityMockUtils.mockCurrentUser(currentUser);
+
+        mockMvc.perform(put("/orders?orderId={orderId}&skiId={skiId}&skiAmount={skiAmount}", orderId, skiId, skiAmount)
+                        .header("Authorization", BEARER_TOKEN))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @Sql("/db/insertTestOrders.sql")
-    @WithMockUser(roles = "admin")
     @Transactional
     public void delete() throws Exception {
         Long orderId = 1L;
@@ -140,7 +174,21 @@ public class OrderControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-       Assertions.assertNull(orderService.findOrderById(orderId));
+        Assertions.assertNull(orderService.findOrderById(orderId));
     }
 
+    @Test
+    @Sql("/db/insertTestOrders.sql")
+    @WithMockUser(roles = "admin")
+    @Transactional
+    public void negativeDelete() throws Exception {
+        Long orderId = 0L;
+
+        doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
+        SecurityMockUtils.mockCurrentUser(currentUser);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orders?orderId={orderId}", orderId)
+                        .header("Authorization", BEARER_TOKEN))
+                .andExpect(status().isNotFound());
+    }
 }
