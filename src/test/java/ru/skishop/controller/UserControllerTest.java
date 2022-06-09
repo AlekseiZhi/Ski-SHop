@@ -69,10 +69,10 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        UserDto actualUserDto = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
+        UserDto actualUser = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
 
-        Assertions.assertEquals(expectedUserDto.getFullName(), actualUserDto.getFullName());
-        Assertions.assertNotNull(userService.findById(actualUserDto.getId()));
+        Assertions.assertEquals(expectedUserDto.getFullName(), actualUser.getFullName());
+        Assertions.assertNotNull(userService.findById(actualUser.getId()));
     }
 
     @Test
@@ -130,11 +130,11 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<UserDto> actualUserDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<UserDto> actualUsers = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         int expectedSize = 2;
-        Assertions.assertEquals(expectedSize, actualUserDtos.size());
+        Assertions.assertEquals(expectedSize, actualUsers.size());
     }
 
     @Test
@@ -152,8 +152,8 @@ public class UserControllerTest {
 
         String expectedFullName = "admin";
 
-        UserDto actualUserDtos = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
-        Assertions.assertEquals(expectedFullName, actualUserDtos.getFullName());
+        UserDto actualUser = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
+        Assertions.assertEquals(expectedFullName, actualUser.getFullName());
     }
 
     @Test
@@ -176,25 +176,25 @@ public class UserControllerTest {
         RoleDto role = new RoleDto();
         role.setName("admin");
         role.setId(1L);
-        UserDto expectedUserDto = new UserDto();
-        expectedUserDto.setId(2L);
-        expectedUserDto.setFullName("testName");
-        expectedUserDto.setEmail("test@email");
-        expectedUserDto.setPassword("password");
-        expectedUserDto.setRoles(List.of(role));
+        UserDto expectedUser = new UserDto();
+        expectedUser.setId(2L);
+        expectedUser.setFullName("testName");
+        expectedUser.setEmail("user@mail");
+        expectedUser.setPassword("password");
+        expectedUser.setRoles(List.of(role));
 
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
 
         MvcResult mvcResult = mockMvc.perform(put("/users")
                         .header("Authorization", BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(OBJECT_MAPPER.writeValueAsString(expectedUserDto)))
+                        .content(OBJECT_MAPPER.writeValueAsString(expectedUser)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        UserDto actualUserDto = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
+        UserDto actualUser = HttpUtils.convertMvcResult(mvcResult, UserDto.class);
 
-        Assertions.assertEquals(expectedUserDto.getFullName(), actualUserDto.getFullName());
+        Assertions.assertEquals(expectedUser.getFullName(), actualUser.getFullName());
     }
 
     @Test

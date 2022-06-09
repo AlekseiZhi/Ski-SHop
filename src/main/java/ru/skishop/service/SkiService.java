@@ -34,7 +34,7 @@ public class SkiService {
 
     public SkiDto edit(SkiDto skiDto) {
         if (!skiRepository.existsById(skiDto.getId())) {
-            log.info("SkiService: Not found Ski by id = {}", skiDto.getId());
+            log.error("SkiService: Not found Ski by id = {}", skiDto.getId());
             throw new NotFoundException("Not found Ski by id = " + skiDto.getId());
         }
         Ski ski = skiMapper.toEntity(skiDto);
@@ -44,7 +44,7 @@ public class SkiService {
 
     public void delete(Long id) {
         if (!skiRepository.existsById(id)) {
-            log.info("SkiService: Not found Ski by id = {}", id);
+            log.error("SkiService: Not found Ski by id = {}", id);
             throw new NotFoundException("Not found Ski by id = " + id);
         }
         skiRepository.deleteById(id);
@@ -57,7 +57,11 @@ public class SkiService {
         return new PaginationWrapper<>(skiDtoList, filter.getPage(), filter.getSize(), pagedResult.getTotalElements(), pagedResult.getTotalPages());
     }
 
-    public SkiDto find(Long id) {
+    public SkiDto findById(Long id) {
+        if (!skiRepository.existsById(id)) {
+            log.error("SkiService: Not found Ski by id = {}", id);
+            throw new NotFoundException("Not found Ski by id = " + id);
+        }
         return skiMapper.toSkiDto(skiRepository.findSkisById(id));
     }
 }

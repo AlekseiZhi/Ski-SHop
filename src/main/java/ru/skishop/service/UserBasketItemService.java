@@ -43,17 +43,17 @@ public class UserBasketItemService {
 
     public UserBasketItemDto getBasketItem(Long userId, Long skiId) {
         if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
-            log.info("UserBasketItemService: entry with userId = {} and skiId = {} number not found",userId, skiId);
-            throw new NotFoundException("Entry number not found with userId = "+ userId + " and skiId = " + skiId);
+            log.error("UserBasketItemService: entry with userId = {} and skiId = {} number not found", userId, skiId);
+            throw new NotFoundException("Entry number not found with userId = " + userId + " and skiId = " + skiId);
         }
         UserBasketItem userBasketItem = userBasketItemRepository.findUserBasketItemByUserIdAndSkiId(userId, skiId);
         return userBasketItemMapper.toUserBasketItemDto(userBasketItem);
     }
 
-    public UserBasketItem findById(Long userBasketItemId){
-        if(!userBasketItemRepository.existsUserBasketItemById(userBasketItemId)){
-            log.info("UserBasketItemService: entry with userBasketItemId = {} number not found",userBasketItemId);
-            throw new NotFoundException("Entry number not found with userBasketItemId = "+ userBasketItemId);
+    public UserBasketItem findById(Long userBasketItemId) {
+        if (!userBasketItemRepository.existsUserBasketItemById(userBasketItemId)) {
+            log.error("UserBasketItemService: entry with userBasketItemId = {} number not found", userBasketItemId);
+            throw new NotFoundException("Entry number not found with userBasketItemId = " + userBasketItemId);
         }
         return userBasketItemRepository.findUserBasketItemById(userBasketItemId);
     }
@@ -61,7 +61,7 @@ public class UserBasketItemService {
     public UserBasketItemDto create(Long skiId) {
         Long userId = currentUser.getId();
         if (userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
-            log.info("UserBasketItemService: entry with skiId = {} number already exists", skiId);
+            log.error("UserBasketItemService: entry with skiId = {} number already exists", skiId);
             throw new EntityExistException("Entry already exists");
         }
         UserBasketItem userBasketItem = new UserBasketItem();
@@ -76,7 +76,7 @@ public class UserBasketItemService {
     public UserBasketItemDto editSkiAmount(Long skiId, int skiAmount) {
         Long userId = currentUser.getId();
         if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
-            log.info("UserBasketItemService: Not found Ski by {}", skiId);
+            log.error("UserBasketItemService: Not found Ski by {}", skiId);
             throw new NotFoundException("Not found Ski by id = " + skiId);
         }
         userBasketItemRepository.editSkiAmount(skiId, skiAmount);
@@ -88,7 +88,7 @@ public class UserBasketItemService {
     public void delete(Long skiId) {
         Long userId = currentUser.getId();
         if (!userBasketItemRepository.existsByUserIdAndSkiId(userId, skiId)) {
-            log.info("UserBasketItemService: Not found Ski by {}", skiId);
+            log.error("UserBasketItemService: Not found Ski by {}", skiId);
             throw new NotFoundException("Not found Ski by id = " + skiId);
         }
         userBasketItemRepository.deleteUserBasketItemByUserIdAndSkiId(userId, skiId);

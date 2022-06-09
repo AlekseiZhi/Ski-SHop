@@ -35,29 +35,22 @@ public class UserService {
     public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            log.info("UserService: Not found User by email = {}", email);
+            log.error("UserService: Not found User by email = {}", email);
             throw new NotFoundException("Not found User by email = " + email);
         }
         return user;
     }
 
-//    public UserDto findById(Long id) {
-//        User user = userRepository.findById(id).orElseThrow(() -> {
-//            log.info("UserService: Not found User by id = {}", id);
-//            throw new NotFoundException("Not found User by id = " + id);
-//        });
-//        return userMapper.toUserDto(user);
-//    }
-
     public UserDto findById(Long userId) {
         User user = userRepository.findUserById(userId);
-        if (userRepository.findUserById(userId)==null){
+        if (!userRepository.existsById(userId)) {
             log.info("UserService: Not found User by id = {}", userId);
             throw new NotFoundException("Not found User by id = " + userId);
         }
         return userMapper.toUserDto(user);
     }
 
+    @Transactional
     public UserDto createNewUser(UserDto userDto) {
         return createOrUpdate(userDto);
     }
@@ -72,7 +65,20 @@ public class UserService {
 
     @Transactional
     public UserDto editUser(UserDto userDto) {
+        if ((userRepository.findUserByEmail(userDto.getEmail())) == null) {
+            log.error("UserService: Not found User by email = {}", userDto.getEmail());
+            throw new NotFoundException("Not found User by email = " + userDto.getEmail());
+        }
         return createOrUpdate(userDto);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            log.error("UserService: Not found user by id = {}", userId);
+            throw new NotFoundException("Not found user by id = " + userId);
+        }
+        userRepository.deleteById(userId);
     }
 
     private UserDto createOrUpdate(UserDto userDto) {
@@ -81,14 +87,5 @@ public class UserService {
         List<Long> roleIds = userDto.getRoles().stream().map(RoleDto::getId).collect(Collectors.toList());
         user.setRoles(roleService.getRolesByIds(roleIds));
         return userMapper.toUserDto(userRepository.save(user));
-    }
-
-    @Transactional
-    public void deleteUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            log.info("UserService: Not found user by id = {}", userId);
-            throw new NotFoundException("Not found user by id = " + userId);
-        }
-        userRepository.deleteById(userId);
     }
 }

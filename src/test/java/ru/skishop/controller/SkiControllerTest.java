@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skishop.dto.PaginationWrapper;
 import ru.skishop.dto.SkiDto;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.service.SecurityService;
 import ru.skishop.service.SkiService;
 import utils.HttpUtils;
@@ -153,10 +154,10 @@ public class SkiControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        SkiDto actual = HttpUtils.convertMvcResult(mvcResult, SkiDto.class);
+        SkiDto actualSki = HttpUtils.convertMvcResult(mvcResult, SkiDto.class);
 
-        Assertions.assertEquals(expected.getTitle(), actual.getTitle());
-        Assertions.assertNotNull(actual.getId());
+        Assertions.assertEquals(expected.getTitle(), actualSki.getTitle());
+        Assertions.assertNotNull(actualSki.getId());
     }
 
     @WithMockUser(roles = "admin")
@@ -201,10 +202,10 @@ public class SkiControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        SkiDto actualSkiDto = HttpUtils.convertMvcResult(mvcResult, SkiDto.class);
+        SkiDto actualSki = HttpUtils.convertMvcResult(mvcResult, SkiDto.class);
 
-        Assertions.assertEquals(expected.getTitle(), actualSkiDto.getTitle());
-        Assertions.assertEquals(expected.getId(), actualSkiDto.getId());
+        Assertions.assertEquals(expected.getTitle(), actualSki.getTitle());
+        Assertions.assertEquals(expected.getId(), actualSki.getId());
     }
 
     @WithMockUser(roles = "admin")
@@ -255,26 +256,26 @@ public class SkiControllerTest {
     @Sql("/db/insertTestSki.sql")
     @Transactional
     public void delete() throws Exception {
-        Long testId = 1L;
+        Long skiId = 1L;
 
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", testId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", skiId)
                         .header("Authorization", BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertNull(skiService.find(testId));
+        Assertions.assertThrows(NotFoundException.class, () -> skiService.findById(skiId));
     }
 
     @Test
     @Transactional
     public void negativeDelete() throws Exception {
-        Long testId = 4L;
+        Long skiId = 4L;
 
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", testId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/skis/{testId}", skiId)
                         .header("Authorization", BEARER_TOKEN)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());

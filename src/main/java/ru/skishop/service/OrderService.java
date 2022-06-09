@@ -36,6 +36,10 @@ public class OrderService {
     }
 
     public OrderDto findOrderById(Long orderId) {
+        if (!orderRepository.existsById(orderId)) {
+            log.error("OrderService: not found order by orderId = {}", orderId);
+            throw new NotFoundException("Not found order by orderId = " + orderId);
+        }
         Order order = orderRepository.findOrderById(orderId);
         return orderMapper.toOrderDto(order);
     }
@@ -46,7 +50,7 @@ public class OrderService {
 
         List<UserBasketItem> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUser();
         if (userBasketItemDtoList.isEmpty()) {
-            log.info("OrderService: Basket is empty");
+            log.error("OrderService: Basket is empty");
             throw new NotFoundException("Basket is empty for userId = " + userId);
         }
         List<OrderItem> orderItemList = userBasketItemDtoList.stream().map(orderItemMapper::toOrderItem).collect(Collectors.toList());
@@ -73,7 +77,7 @@ public class OrderService {
     @Transactional
     public OrderDto edit(Long orderId, Long skiId, int skiAmount) {
         if (!orderRepository.existsById(orderId)) {
-            log.info("OrderService: Not found order by id = {}", orderId);
+            log.error("OrderService: Not found order by id = {}", orderId);
             throw new NotFoundException("Not found order by id = " + orderId);
         }
         orderItemService.edit(orderId, skiId, skiAmount);
@@ -84,7 +88,7 @@ public class OrderService {
     @Transactional
     public void delete(Long orderId) {
         if (!orderRepository.existsById(orderId)) {
-            log.info("OrderService: Not found order by id = {}", orderId);
+            log.error("OrderService: Not found order by id = {}", orderId);
             throw new NotFoundException("Not found order by id = " + orderId);
         }
         orderItemService.delete(orderId);

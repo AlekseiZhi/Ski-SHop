@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skishop.dto.OrderDto;
 import ru.skishop.entity.CurrentUser;
+import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.service.OrderService;
 import ru.skishop.service.SecurityService;
 import utils.SecurityMockUtils;
@@ -62,14 +63,14 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<OrderDto> actualOrderDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<OrderDto> actualOrders = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         int expectedOrderSize = 2;
         int expectedSkiAmount = 3;
-        int actualSkiAmount = actualOrderDtos.get(0).getItems().get(0).getAmount();
+        int actualSkiAmount = actualOrders.get(0).getItems().get(0).getAmount();
 
-        Assertions.assertEquals(expectedOrderSize, actualOrderDtos.size());
+        Assertions.assertEquals(expectedOrderSize, actualOrders.size());
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
     }
 
@@ -85,12 +86,14 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        OrderDto actualOrderDto = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        OrderDto actualOrders = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         int expectedSkiAmount = 5;
 
-        Assertions.assertEquals(expectedSkiAmount, actualOrderDto.getItems().get(0).getAmount());
+        Assertions.assertEquals(expectedSkiAmount, actualOrders.getItems().get(0).getAmount());
+        Assertions.assertNotNull(actualOrders.getId());
+        Assertions.assertNotNull(orderService.findOrderById(actualOrders.getId()));
     }
 
     @Test
@@ -121,12 +124,12 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        OrderDto actualOrderDto = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        OrderDto actualOrders = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
         int expectedSkiAmount = 11;
 
-        Assertions.assertEquals(expectedSkiAmount, actualOrderDto.getItems().get(1).getAmount());
+        Assertions.assertEquals(expectedSkiAmount, actualOrders.getItems().get(1).getAmount());
     }
 
     @Test
@@ -174,7 +177,7 @@ public class OrderControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertNull(orderService.findOrderById(orderId));
+        Assertions.assertThrows(NotFoundException.class, () -> orderService.findOrderById(orderId));
     }
 
     @Test

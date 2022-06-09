@@ -64,13 +64,13 @@ public class UserBasketItemControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<UserBasketItemDto> actualUserBasketItemDtos = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        List<UserBasketItemDto> actualUserBasketItems = OBJECT_MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
         });
 
-        int actualSkiAmount = actualUserBasketItemDtos.get(0).getAmount();
+        int actualSkiAmount = actualUserBasketItems.get(0).getAmount();
         int expectedSkiAmount = 1;
 
-        Assertions.assertEquals(size, actualUserBasketItemDtos.size());
+        Assertions.assertEquals(size, actualUserBasketItems.size());
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
     }
 
@@ -143,12 +143,12 @@ public class UserBasketItemControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        UserBasketItemDto userBasketItemDto = HttpUtils.convertMvcResult(mvcResult, UserBasketItemDto.class);
-        List<UserBasketItemDto> actualUserBasketItemDtoList = userBasketItemService.getBasketForCurrentUserPaging(0, 2);
-        int actualSkiAmount = actualUserBasketItemDtoList.get(0).getAmount();
+        UserBasketItemDto userBasketItem = HttpUtils.convertMvcResult(mvcResult, UserBasketItemDto.class);
+        List<UserBasketItemDto> actualUserBasketItems = userBasketItemService.getBasketForCurrentUserPaging(0, 2);
+        int actualSkiAmount = actualUserBasketItems.get(0).getAmount();
 
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
-        Assertions.assertEquals(expectedSkiAmount, userBasketItemDto.getAmount());
+        Assertions.assertEquals(expectedSkiAmount, userBasketItem.getAmount());
     }
 
     @Test

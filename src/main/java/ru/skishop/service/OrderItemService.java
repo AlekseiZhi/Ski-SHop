@@ -23,18 +23,18 @@ public class OrderItemService {
     }
 
     @Transactional
-    public List<OrderItem> saveAll(List<OrderItem> orderItemList) {
-        return orderItemRepository.saveAll(orderItemList);
+    public void saveAll(List<OrderItem> orderItemList) {
+        orderItemRepository.saveAll(orderItemList);
     }
 
     @Transactional
     public void edit(Long orderId, Long skiId, int skiAmount) {
         if (!orderItemRepository.existsOrderItemByOrderId(orderId)) {
-            log.info("OrderItemService: Not found orderItem by orderId = {}", orderId);
+            log.error("OrderItemService: Not found orderItem by orderId = {}", orderId);
             throw new NotFoundException("Not found orderItem by orderId = " + orderId);
         }
         if (!orderItemRepository.existsOrderItemBySkiId(skiId)) {
-            log.info("OrderItemService: Not found orderItem by skiId = {}", skiId);
+            log.error("OrderItemService: Not found orderItem by skiId = {}", skiId);
             throw new NotFoundException("Not found orderItem by skiId = " + skiId);
         }
         orderItemRepository.editSkiAmount(orderId, skiId, skiAmount);
@@ -43,7 +43,7 @@ public class OrderItemService {
     @Transactional
     public void delete(Long orderId) {
         if (!orderItemRepository.existsById(orderId)) {
-            log.info("OrderItemService: Not found orderItem by orderId = {}", orderId);
+            log.error("OrderItemService: Not found orderItem by orderId = {}", orderId);
             throw new NotFoundException("Not found orderItem by orderId = " + orderId);
         }
         orderItemRepository.deleteByOrderId(orderId);
