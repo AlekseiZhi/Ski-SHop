@@ -46,7 +46,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
-    public ResponseEntity<UserDto> findById(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable("id") @Min(1) Long id) {
         UserDto user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
@@ -85,7 +85,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "403", description = "You do not have access rights")
     })
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") @Min(message = "value must be greater than 0", value = 1) Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") @Min(1) Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

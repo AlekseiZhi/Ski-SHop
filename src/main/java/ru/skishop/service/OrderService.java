@@ -31,8 +31,8 @@ public class OrderService {
     public List<OrderDto> getOrderForCurrentUser() {
         Long currentUserId = currentUser.getId();
 
-        List<Order> orderList = orderRepository.findAllByUserId(currentUserId);
-        return orderList.stream().map(orderMapper::toOrderDto).collect(Collectors.toList());
+        List<Order> ordersList = orderRepository.findAllByUserId(currentUserId);
+        return ordersList.stream().map(orderMapper::toOrderDto).collect(Collectors.toList());
     }
 
     public OrderDto findOrderById(Long orderId) {
@@ -53,10 +53,11 @@ public class OrderService {
             log.error("OrderService: Basket is empty");
             throw new NotFoundException("Basket is empty for userId = " + currentUserId);
         }
+
         List<OrderItem> orderItemList = userBasketItemDtoList.stream().map(orderItemMapper::toOrderItem).collect(Collectors.toList());
 
         Order order = new Order();
-        order.setDate(Instant.now());
+        order.setCreateDate(Instant.now());
         order.setUser(new User(currentUserId));
         order = orderRepository.save(order);
 

@@ -8,10 +8,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserBasketItemDto {
 
-    Long id;
+    private Long id;
 
     @NotNull
-    private SkiDto skiDto;
+    private SkiDto ski;
 
     @Min(value = 1)
     private int amount;

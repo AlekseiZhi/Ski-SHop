@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.OrderDto;
 import ru.skishop.service.OrderService;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
+@Validated
 public class OrderController {
 
     private final OrderService orderService;
@@ -27,8 +29,8 @@ public class OrderController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     public ResponseEntity<List<OrderDto>> getOrderForCurrentUser() {
-        List<OrderDto> orderDto = orderService.getOrderForCurrentUser();
-        return ResponseEntity.ok(orderDto);
+        List<OrderDto> ordersDto = orderService.getOrderForCurrentUser();
+        return ResponseEntity.ok(ordersDto);
     }
 
     @PostMapping("/buy")
@@ -56,14 +58,14 @@ public class OrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @RolesAllowed("admin")
     @Operation(summary = "Delete order")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Delete order"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> delete(@RequestParam("orderId") @Min(1) Long orderId) {
+    public ResponseEntity<Void> delete(@PathVariable("id") @Min(1) Long orderId) {
         orderService.delete(orderId);
         return ResponseEntity.noContent().build();
     }

@@ -29,7 +29,7 @@ public class UserBasketItemService {
     private final UserBasketItemMapper userBasketItemMapper;
     private final CurrentUser currentUser;
 
-    public List<UserBasketItemDto> getBasketForCurrentUserPaging(int page, int size) {
+    public List<UserBasketItemDto> getBasketForCurrentUser(int page, int size) {
         Long currentUserId = currentUser.getId();
         Pageable paging = PageRequest.of(page, size);
         Page<UserBasketItem> pagedResult = userBasketItemRepository.findAllByUserId(currentUserId, paging);

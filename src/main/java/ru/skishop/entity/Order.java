@@ -11,16 +11,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders")
 @NoArgsConstructor
+@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_date")
-    private Instant date;
+    @Column(name = "create_date")
+    private Instant createDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

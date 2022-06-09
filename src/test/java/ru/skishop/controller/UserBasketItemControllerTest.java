@@ -144,7 +144,7 @@ public class UserBasketItemControllerTest {
                 .andReturn();
 
         UserBasketItemDto userBasketItem = HttpUtils.convertMvcResult(mvcResult, UserBasketItemDto.class);
-        List<UserBasketItemDto> actualUserBasketItems = userBasketItemService.getBasketForCurrentUserPaging(0, 2);
+        List<UserBasketItemDto> actualUserBasketItems = userBasketItemService.getBasketForCurrentUser(0, 2);
         int actualSkiAmount = actualUserBasketItems.get(0).getAmount();
 
         Assertions.assertEquals(expectedSkiAmount, actualSkiAmount);
@@ -225,6 +225,6 @@ public class UserBasketItemControllerTest {
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
-        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUserPaging(page, size).isEmpty());
+        Assertions.assertTrue(userBasketItemService.getBasketForCurrentUser(page, size).isEmpty());
     }
 }

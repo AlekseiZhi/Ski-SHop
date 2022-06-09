@@ -8,6 +8,6 @@ import ru.skishop.entity.UserBasketItem;
 @Mapper(componentModel = "spring")
 public interface UserBasketItemMapper {
 
-    @Mapping(source = "userBasketItem.ski", target = "skiDto")
+    @Mapping(source = "userBasketItem.ski", target = "ski")
     UserBasketItemDto toUserBasketItemDto(UserBasketItem userBasketItem);
 }

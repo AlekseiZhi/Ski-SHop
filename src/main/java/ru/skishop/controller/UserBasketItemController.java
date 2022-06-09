@@ -27,9 +27,10 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "200", description = "Get list of basket "),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<List<UserBasketItemDto>> getBasketForCurrentUser(int page, int size) {
-        List<UserBasketItemDto> paging = userBasketItemService.getBasketForCurrentUserPaging(page, size);
-        return ResponseEntity.ok(paging);
+    public ResponseEntity<List<UserBasketItemDto>> getBasketForCurrentUser(@RequestParam("page") @Min(0) int page,
+                                                                           @RequestParam("size") @Min(1) int size) {
+        List<UserBasketItemDto> basketItems = userBasketItemService.getBasketForCurrentUser(page, size);
+        return ResponseEntity.ok(basketItems);
     }
 
     @PostMapping
@@ -55,13 +56,13 @@ public class UserBasketItemController {
         return ResponseEntity.ok(userBasketItemDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete entry in the basket")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Delete entry in the basket"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> delete(@RequestParam("skiId") @Min(1) Long skiId) {
+    public ResponseEntity<Void> delete(@PathVariable("id") @Min(1) Long skiId) {
         userBasketItemService.delete(skiId);
         return ResponseEntity.noContent().build();
     }
@@ -72,7 +73,7 @@ public class UserBasketItemController {
             @ApiResponse(responseCode = "204", description = "Delete entry in the basket for current user"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
     })
-    public ResponseEntity<Void> clearDbForCurrentUser() {
+    public ResponseEntity<Void> clearBasketForCurrentUser() {
         userBasketItemService.clearBasketForCurrentUser();
         return ResponseEntity.noContent().build();
     }
