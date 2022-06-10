@@ -18,7 +18,7 @@ public class RoleService {
         return roleRepository.findRolesByIdList(ids);
     }
 
-    public Role getDefaultRole(){
+    public Role getDefaultRole() {
         return roleRepository.findByName(DEFAULT_ROLE_USER);
     }
 }

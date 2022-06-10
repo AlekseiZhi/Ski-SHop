@@ -1,15 +1,19 @@
 package ru.skishop.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "skis")
+@NoArgsConstructor
 public class Ski {
 
     @Id
@@ -21,4 +25,8 @@ public class Ski {
     private String title;
     private int length;
     private BigDecimal price;
+
+    public Ski(Long skiId) {
+        this.id = skiId;
+    }
 }

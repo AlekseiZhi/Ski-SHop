@@ -1,8 +1,10 @@
 package ru.skishop.exceptionHandler;
 
-public class NotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class NotFoundException extends ApiException {
 
     public NotFoundException(String msg) {
-        super(msg);
+        super(msg, HttpStatus.NOT_FOUND.value());
     }
 }

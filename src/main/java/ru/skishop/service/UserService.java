@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skishop.dto.RoleDto;
 import ru.skishop.dto.UserDto;
 import ru.skishop.dto.UserForAuthDto;
-import ru.skishop.entity.Role;
 import ru.skishop.entity.User;
 import ru.skishop.exceptionHandler.NotFoundException;
 import ru.skishop.mapper.UserMapper;
@@ -35,24 +35,27 @@ public class UserService {
     public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
-            log.info("UserService: Not found User by email = {}", email);
+            log.error("UserService: Not found User by email = {}", email);
             throw new NotFoundException("Not found User by email = " + email);
         }
         return user;
     }
 
-    public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> {
-            log.info("UserService: Not found User by id = {}", id);
-            throw new NotFoundException("Not found User by id = " + id);
-        });
+    public UserDto findById(Long userId) {
+        User user = userRepository.findUserById(userId);
+        if (!userRepository.existsById(userId)) {
+            log.info("UserService: Not found User by id = {}", userId);
+            throw new NotFoundException("Not found User by id = " + userId);
+        }
         return userMapper.toUserDto(user);
     }
 
+    @Transactional
     public UserDto createNewUser(UserDto userDto) {
         return createOrUpdate(userDto);
     }
 
+    @Transactional
     public User createNewUser(UserForAuthDto userForAuthDto) {
         User user = userMapper.toEntity(userForAuthDto);
         user.setRoles(List.of(roleService.getDefaultRole()));
@@ -60,8 +63,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public UserDto editUser(UserDto userDto) {
+        if ((userRepository.findUserByEmail(userDto.getEmail())) == null) {
+            log.error("UserService: Not found User by email = {}", userDto.getEmail());
+            throw new NotFoundException("Not found User by email = " + userDto.getEmail());
+        }
         return createOrUpdate(userDto);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            log.error("UserService: Not found user by id = {}", userId);
+            throw new NotFoundException("Not found user by id = " + userId);
+        }
+        userRepository.deleteById(userId);
     }
 
     private UserDto createOrUpdate(UserDto userDto) {
@@ -70,9 +87,5 @@ public class UserService {
         List<Long> roleIds = userDto.getRoles().stream().map(RoleDto::getId).collect(Collectors.toList());
         user.setRoles(roleService.getRolesByIds(roleIds));
         return userMapper.toUserDto(userRepository.save(user));
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
     }
 }

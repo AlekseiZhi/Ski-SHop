@@ -35,7 +35,6 @@ class AuthControllerTest {
     @Transactional
     @Sql("/db/insertTestRoleAndUser.sql")
     public void login() throws Exception {
-
         UserForAuthDto userForAuthDto = new UserForAuthDto();
         userForAuthDto.setEmail("admin@mail");
         userForAuthDto.setPassword("123");
@@ -58,7 +57,6 @@ class AuthControllerTest {
     @Transactional
     @Sql("/db/insertTestRoleAndUser.sql")
     public void negativeLogin() throws Exception {
-
         UserForAuthDto userForAuthDto = new UserForAuthDto();
         userForAuthDto.setEmail("asd");
         userForAuthDto.setPassword("asd");
@@ -74,7 +72,6 @@ class AuthControllerTest {
     @Transactional
     @Sql("/db/insertTestRoleAndUser.sql")
     void createNewUser() throws Exception {
-
         UserForAuthDto userForAuthDto = new UserForAuthDto();
         userForAuthDto.setEmail("test1@mail");
         userForAuthDto.setPassword("asd123");
@@ -98,7 +95,6 @@ class AuthControllerTest {
     @Transactional
     @Sql("/db/insertTestRoleAndUser.sql")
     void negativeCreateNewUser() throws Exception {
-
         UserForAuthDto userForAuthDto = new UserForAuthDto();
         userForAuthDto.setEmail("test1@mail");
         userForAuthDto.setPassword("");
