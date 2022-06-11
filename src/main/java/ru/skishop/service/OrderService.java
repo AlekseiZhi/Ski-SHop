@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.skishop.dto.MailInfoDto;
 import ru.skishop.dto.OrderDto;
 import ru.skishop.dto.OrderItemDto;
 import ru.skishop.entity.*;
 import ru.skishop.exceptionHandler.NotFoundException;
+import ru.skishop.feign.EmailProxy;
 import ru.skishop.mapper.OrderItemMapper;
 import ru.skishop.mapper.OrderMapper;
 import ru.skishop.repository.OrderRepository;
@@ -23,10 +25,12 @@ public class OrderService {
 
     private final UserBasketItemService userBasketItemService;
     private final OrderItemService orderItemService;
+    private final EmailProxy emailProxy;
     private final OrderItemMapper orderItemMapper;
     private final OrderMapper orderMapper;
     private final CurrentUser currentUser;
     private final OrderRepository orderRepository;
+    private static final String SHOP_MAIL = "ski-shop@mail.ru";
 
     public List<OrderDto> getOrderForCurrentUser() {
         Long currentUserId = currentUser.getId();
@@ -72,6 +76,8 @@ public class OrderService {
 
         userBasketItemService.clearBasketForCurrentUser();
 
+        MailInfoDto mailInfoDto = createMail(currentUser.getEmail(), "xanerih336@game4hr.com", "Order id = " + order.getId(), "thanks for order");
+        emailProxy.senEmail(mailInfoDto);
         return orderDto;
     }
 
@@ -94,5 +100,14 @@ public class OrderService {
         }
         orderItemService.delete(orderId);
         orderRepository.deleteById(orderId);
+    }
+
+    private MailInfoDto createMail(String mailTo, String mailFrom, String subject, String message) {
+        MailInfoDto mailInfoDto = new MailInfoDto();
+        mailInfoDto.setMailTo(mailTo);
+        mailInfoDto.setMailFrom(mailFrom);
+        mailInfoDto.setSubject(subject);
+        mailInfoDto.setMessage(message);
+        return mailInfoDto;
     }
 }

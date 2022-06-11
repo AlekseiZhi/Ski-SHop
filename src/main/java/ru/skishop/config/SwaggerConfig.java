@@ -37,7 +37,7 @@ public class SwaggerConfig {
                 "MySkiShop",
                 "1.0.0",
                 null,
-                new Contact("Zhitenev Aleksei", null, "redcollar@mail.ru"),
+                new Contact("Zhitenev Aleksei", null, "ski-shop@mail.ru"),
                 null,
                 null,
                 Collections.emptyList());
