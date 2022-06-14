@@ -52,6 +52,7 @@ public class OrderService {
     @Transactional
     public OrderDto create() {
         Long currentUserId = currentUser.getId();
+        String userMail = currentUser.getEmail();
 
         List<UserBasketItem> userBasketItemDtoList = userBasketItemService.getBasketForCurrentUser();
         if (userBasketItemDtoList.isEmpty()) {
@@ -77,7 +78,8 @@ public class OrderService {
 
         userBasketItemService.clearBasketForCurrentUser();
 
-        notificationService.sendMail(currentUser.getEmail(), shopMail, "Order id = " + order.getId(), "thanks for order");
+        notificationService.sendMail(userMail, shopMail, "Order id = " + order.getId(), "thanks for order");
+
         return orderDto;
     }
 
