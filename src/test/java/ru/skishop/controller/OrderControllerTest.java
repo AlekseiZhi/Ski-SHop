@@ -145,7 +145,7 @@ public class OrderControllerTest {
 
         mockMvc.perform(put("/orders?orderId={orderId}&skiId={skiId}&skiAmount={skiAmount}", orderId, skiId, skiAmount)
                         .header("Authorization", BEARER_TOKEN))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class OrderControllerTest {
 
         mockMvc.perform(put("/orders?orderId={orderId}&skiId={skiId}&skiAmount={skiAmount}", orderId, skiId, skiAmount)
                         .header("Authorization", BEARER_TOKEN))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class OrderControllerTest {
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/orders?orderId={orderId}", orderId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orders/{orderId}", orderId)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
@@ -190,8 +190,8 @@ public class OrderControllerTest {
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/orders?orderId={orderId}", orderId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orders/{orderId}", orderId)
                         .header("Authorization", BEARER_TOKEN))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 }

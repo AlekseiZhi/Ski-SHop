@@ -16,6 +16,10 @@ spring:
 jwt:
   secret: secret
 
+notification:
+  shop-mail: skishop@gmail.com
+  url: localhost:8082
+
 #logging:
 #  level:
 #    root: debug

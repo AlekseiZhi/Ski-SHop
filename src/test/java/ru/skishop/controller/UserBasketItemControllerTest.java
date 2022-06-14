@@ -190,7 +190,7 @@ public class UserBasketItemControllerTest {
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/baskets?skiId={skiId}", skiId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/baskets/{skiId}", skiId)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNoContent());
 
@@ -206,7 +206,7 @@ public class UserBasketItemControllerTest {
         doAnswer(SecurityMockUtils.replaceTokenProcess()).when(securityService).addToSecurityContext(any(String.class));
         SecurityMockUtils.mockCurrentUser(currentUser);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/baskets?skiId={skiId}", skiId)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/baskets/{skiId}", skiId)
                         .header("Authorization", BEARER_TOKEN))
                 .andExpect(status().isNotFound());
     }

@@ -2,6 +2,7 @@ package ru.skishop.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skishop.dto.OrderDto;
@@ -23,10 +24,14 @@ public class OrderService {
 
     private final UserBasketItemService userBasketItemService;
     private final OrderItemService orderItemService;
+    private final NotificationService notificationService;
     private final OrderItemMapper orderItemMapper;
     private final OrderMapper orderMapper;
     private final CurrentUser currentUser;
     private final OrderRepository orderRepository;
+
+    @Value("${notification.shop-mail}")
+    private String shopMail;
 
     public List<OrderDto> getOrderForCurrentUser() {
         Long currentUserId = currentUser.getId();
@@ -72,6 +77,7 @@ public class OrderService {
 
         userBasketItemService.clearBasketForCurrentUser();
 
+        notificationService.sendMail(currentUser.getEmail(), shopMail, "Order id = " + order.getId(), "thanks for order");
         return orderDto;
     }
 
