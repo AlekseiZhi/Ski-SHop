@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.skishop.dto.OrderDto;
-import ru.skishop.service.client.NotificationClient;
 import ru.skishop.service.OrderService;
 
 import javax.annotation.security.RolesAllowed;
