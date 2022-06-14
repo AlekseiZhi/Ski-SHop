@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrderService {
 
-    @Value("${notification.shop-mail}")
-    private String shopMail;
     private final UserBasketItemService userBasketItemService;
     private final OrderItemService orderItemService;
     private final NotificationService notificationService;
@@ -31,6 +29,9 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final CurrentUser currentUser;
     private final OrderRepository orderRepository;
+
+    @Value("${notification.shop-mail}")
+    private String shopMail;
 
     public List<OrderDto> getOrderForCurrentUser() {
         Long currentUserId = currentUser.getId();

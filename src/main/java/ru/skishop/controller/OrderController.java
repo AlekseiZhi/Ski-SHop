@@ -22,7 +22,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final NotificationClient notificationClient;
 
     @GetMapping
     @Operation(summary = "Get list of current orders")
