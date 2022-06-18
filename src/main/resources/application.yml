@@ -4,10 +4,9 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-Class-Name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5432/postgres
-    url: jdbc:postgresql://host.docker.internal:5432/postgres
-    username: postgres
-    password: 123
+    url: ${DATABASE_URL:jdbc:postgresql://host.docker.internal:5432/postgres}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:123}
 
   jpa:
     properties:
@@ -20,9 +19,3 @@ jwt:
 notification:
   shop-mail: skishop@gmail.com
   url: host.docker.internal:8082
-
-#logging:
-#  level:
-#    root: debug
-#    org.springframework.web: debug
-#    org.hibernate: error

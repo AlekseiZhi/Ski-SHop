@@ -1,8 +1,4 @@
 #version: '3.9'
 #
 #services:
-#  app:
-#    build: ./
-#    container_name: skishop-app
-#    ports:
-#      - 5432:5432
+#
