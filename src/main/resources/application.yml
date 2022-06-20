@@ -13,9 +13,10 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+
 jwt:
   secret: secret
 
 notification:
-  shop-mail: skishop@gmail.com
-  url: host.docker.internal:8082
+  shop-mail: ${SHOP_MAIL:skishop@gmail.com}
+  url: ${NOTIFICATION_URL:host.docker.internal:8082}
