@@ -14,7 +14,7 @@ public class RabbitConfig {
 
     @Bean
     public Queue myQueue() {
-        return new Queue("myQueue", false);
+        return new Queue("notificationQueue", false);
     }
 
     @Bean

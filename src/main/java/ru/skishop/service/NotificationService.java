@@ -33,6 +33,6 @@ public class NotificationService {
         mailInfoDto.setSubject(subject);
         mailInfoDto.setMessage(message);
 
-        rabbitTemplate.convertAndSend("myQueue", mailInfoDto);
+        rabbitTemplate.convertAndSend("notificationQueue", mailInfoDto);
     }
 }
