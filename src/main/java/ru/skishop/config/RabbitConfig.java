@@ -1,6 +1,6 @@
 package ru.skishop.config;
 
-
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -14,6 +14,11 @@ public class RabbitConfig {
 
     @Value("${connection_factory.host_name}")
     private String hostName;
+
+    @Bean
+    public Queue notificationQueue() {
+        return new Queue("notificationQueue", false);
+    }
 
     @Bean
     public ConnectionFactory connectionFactory() {
