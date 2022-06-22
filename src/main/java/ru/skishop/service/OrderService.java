@@ -78,7 +78,7 @@ public class OrderService {
 
         userBasketItemService.clearBasketForCurrentUser();
 
-        notificationService.sendMail(userMail, shopMail, "Order id = " + order.getId(), "thanks for order");
+        notificationService.sendMailRabbit(userMail, shopMail, "Order id = " + order.getId(), "thanks for order");
 
         return orderDto;
     }

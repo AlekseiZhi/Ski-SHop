@@ -4,7 +4,7 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-Class-Name: org.postgresql.Driver
-    url: ${DATABASE_URL:jdbc:postgresql://host.docker.internal:5432/postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
     username: ${DATABASE_USER:postgres}
     password: ${DATABASE_PASSWORD:123}
 
@@ -20,3 +20,6 @@ jwt:
 notification:
   shop-mail: ${SHOP_MAIL:skishop@gmail.com}
   url: ${NOTIFICATION_URL:host.docker.internal:8082}
+
+rabbit:
+  host: ${RABBIT_HOST:localhost}
