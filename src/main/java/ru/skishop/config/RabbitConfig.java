@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    @Value("${connection_factory.host_name}")
+    @Value("${rabbit.host}")
     private String hostName;
 
     @Bean

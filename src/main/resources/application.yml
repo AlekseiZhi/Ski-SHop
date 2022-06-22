@@ -21,5 +21,5 @@ notification:
   shop-mail: ${SHOP_MAIL:skishop@gmail.com}
   url: ${NOTIFICATION_URL:host.docker.internal:8082}
 
-connection_factory:
-  host_name: ${HOST_NAME:localhost}
+rabbit:
+  host: ${RABBIT_HOST:localhost}
